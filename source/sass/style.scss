@@ -1,3 +1,5 @@
-h1 {
-  color: red;
-}
+@import "normalize.scss";
+@import "variables.scss";
+@import "base.scss";
+@import "blocks/page-header.scss";
+@import "blocks/promo-slider.scss";

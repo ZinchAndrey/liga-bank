@@ -1,0 +1,38 @@
+//шрифты
+$roboto: "Roboto Regular", "Arial", sans-serif;
+$roboto-medium: "Roboto Medium", "Arial", sans-serif;
+$roboto-bold: "Roboto Bold", "Arial", sans-serif;
+
+// цвета
+$white: #ffffff;
+$black-text: #1f1e25;
+$blue: #2c36f2;
+
+@mixin button-style-none() {
+  border: none;
+  background-color: inherit;
+  padding: 0;
+}
+
+@mixin hover-effect() {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.3;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1255px;
+  margin: 0 auto;
+}
+
+.button {
+  background-color: inherit;
+  border: none;
+}
