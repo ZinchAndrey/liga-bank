@@ -30,6 +30,12 @@ $grey-text: #707c87;
 
 .container {
   width: 100%;
+  max-width: 1170px;
+  margin: 0 auto;
+}
+
+.container-header {
+  width: 100%;
   max-width: 1255px;
   margin: 0 auto;
 }

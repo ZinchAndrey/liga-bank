@@ -1,0 +1,13 @@
+.credit {
+  h2 {
+    font-family: $roboto-medium;
+    font-weight: bold;
+    font-size: 41px;
+    line-height: 140%;
+  }
+}
+
+.credit__container {
+  border: 1px solid black; //временно
+  min-height: 500px; //временно
+}
