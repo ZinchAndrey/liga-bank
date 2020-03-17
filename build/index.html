@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Liga bank</title>
-    <!-- <link href="fonts/Roboto-Regular.woff2" as="font" crossorigin="anonymous">
-  <link href="fonts/Roboto-Regular.woff" rel="preload" as="font" crossorigin="anonymous">
-  <link href="fonts/Roboto-Medium.woff2" as="font" crossorigin="anonymous">
-  <link href="fonts/Roboto-Medium.woff" rel="preload" as="font" crossorigin="anonymous">
-  <link href="fonts/Roboto-Bold.woff2" as="font" crossorigin="anonymous">
-  <link href="fonts/Roboto-Bold.woff" rel="preload" as="font" crossorigin="anonymous"> -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="fonts/Roboto-Regular.woff2" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Regular.woff" rel="preload" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Medium.woff2" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Medium.woff" rel="preload" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Bold.woff2" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Bold.woff" rel="preload" as="font" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.min.css">
   </head>
   <body>
@@ -19,11 +21,11 @@
         <a href="#" class="page-header__logo">
           <img src="img/logo@2x.svg" alt="Логотип" width="155" height="auto">
         </a>
-        <ul class="page-header__nav">
-          <li class="page-header__item"><a href="#">Услуги</a></li>
-          <li class="page-header__item"><a href="#">Рассчитать кредит</a></li>
-          <li class="page-header__item"><a href="#">Контакты</a></li>
-          <li class="page-header__item"><a href="#">Задать вопрос</a></li>
+        <ul class="page-header__nav nav">
+          <li class="nav__item"><a href="#">Услуги</a></li>
+          <li class="nav__item"><a href="#">Рассчитать кредит</a></li>
+          <li class="nav__item"><a href="#">Контакты</a></li>
+          <li class="nav__item"><a href="#">Задать вопрос</a></li>
         </ul>
         <button class="page-header__login button">Войти в Интернет-банк</button>
       </div>
@@ -31,5 +33,46 @@
     <main>
       <section class="promo-slider"></section>
     </main>
+    <footer class="page-footer">
+      <div class="page-footer__container container container--footer">
+        <div class="page-footer__logo-block">
+          <a href="#" class="page-header__logo">
+            <img src="img/logo@2x.svg" alt="Логотип" width="155" height="auto">
+          </a>
+          <p>
+            150015, г. Москва, ул. Московская, д. 32 Генеральная лицензия Банка
+            России №1050 Ⓒ Лига Банк, 2019
+          </p>
+        </div>
+        <ul class="page-footer__nav nav nav--footer">
+          <li class="nav__item"><a href="#">Услуги</a></li>
+          <li class="nav__item"><a href="#">Рассчитать кредит</a></li>
+          <li class="nav__item"><a href="#">Контакты</a></li>
+          <li class="nav__item"><a href="#">Задать вопрос</a></li>
+        </ul>
+        <p class="page-footer__phone page-footer__phone--mob">
+          <a href="tel:0904">*0904</a>
+          Бесплатно для абонентов МТС, Билайн, Мегафон, Теле2
+        </p>
+        <p class="page-footer__phone page-footer__phone--city">
+          <a href="tel:88001112233">8 800 111 22 33</a>
+          Бесплатный для всех городов России
+        </p>
+        <ul class="page-header__social social">
+          <li class="social__item social__item--fb">
+            <a href="#" aria-label="facebook"></a>
+          </li>
+          <li class="social__item social__item--inst">
+            <a href="#" aria-label="instagram"></a>
+          </li>
+          <li class="social__item social__item--tw">
+            <a href="#" aria-label="twitter"></a>
+          </li>
+          <li class="social__item social__item--youtube">
+            <a href="#" aria-label="youtube"></a>
+          </li>
+        </ul>
+      </div>
+    </footer>
   </body>
 </html>
