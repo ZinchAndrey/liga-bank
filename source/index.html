@@ -38,13 +38,54 @@
         <div class="credit__container container">
           <h2>Кредитный калькулятор</h2>
           <form class="form__credit" action="#" method="post" id="credit-form">
-            <fieldset>
+            <fieldset class="credit__goal">
               <h3>Шаг 1. Цель кредита</h3>
               <select name="goal" id="goal" aria-placeholder="Выберите цель кредита">
                 <option value="hypothec">Ипотченое кредитование</option>
                 <option value="auto">Автомобильное кредитование</option>
                 <option value="consumer">Потребительский кредит</option>
               </select>
+            </fieldset>
+            <fieldset class="credit__parameters">
+              <h3>Шаг 2. Введите параметры кредита</h3>
+              <label for="credit__value">Стоимость недвижимости</label>
+              <button class="credit__value-button credit__value-button--minus">-</button>
+              <input type="text" id="credit__value">
+              <button class="credit__value-button credit__value-button--plus">+</button>
+              <span>От 1 200 000 до 25 000 000 рублей</span>
+
+              <label for="credit__first-payment">Первоначальный взнос</label>
+              <input type="text" id="credit__first-payment">
+              <!-- div.credit__first-payment -->
+              <label for="credit__time">Срок кредитования</label>
+              <input type="text" id="credit__time">
+
+              <input type="checkbox" id="credit__mother-capital">
+              <label for="credit__mother-capital">Использовать материнский капитал</label>
+            </fieldset>
+            <fieldset class="credit__offer">
+              <div class="credit__offer-container">
+                <h3>Наше предложение</h3>
+                <ul class="credit__offer-list">
+                  <li class="credit__offer-item">
+                    <p class="credit__offer-value">1 330 000 рублей</p>
+                    <p class="credit__offer-label">Сумма ипотеки</p>
+                  </li>
+                  <li class="credit__offer-item">
+                    <p class="credit__offer-value">27 868 рублей</p>
+                    <p class="credit__offer-label">Ежемесячный платеж</p>
+                  </li>
+                  <li class="credit__offer-item">
+                    <p class="credit__offer-value">9,40%</p>
+                    <p class="credit__offer-label">Процентная ставка</p>
+                  </li>
+                  <li class="credit__offer-item">
+                    <p class="credit__offer-value">61 929 рублей</p>
+                    <p class="credit__offer-label">Необходимый доход</p>
+                  </li>
+                </ul>
+                <button class="credit__offer-button">Оформить заявку</button>
+              </div>
             </fieldset>
           </form>
         </div>
