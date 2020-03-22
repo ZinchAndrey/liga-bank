@@ -103,6 +103,38 @@ select {
   margin-bottom: 30px;
 }
 
+// стилизация ползунка  https://www.knlnt.com/les?id=54
+// необходимо добавить для moz и opera
+.credit__first-payment-slider {
+  margin-top: 10px;
+
+  input {
+    /* stylelint-disable */
+    -webkit-appearance: none;
+    width: 100%;
+    height: 1px;
+    padding: 0;
+    outline: none;
+    border: none;
+    background-color: $grey-slider;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: $blue;
+      cursor: pointer;
+      transition: 0.5s;
+      /* stylelint-enable */
+
+      &:hover {
+        background-color: lighten($blue, 10%);
+      }
+    }
+  }
+}
+
 .credit__time-block {
   margin-bottom: 30px;
 }

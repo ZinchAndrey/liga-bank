@@ -24,7 +24,7 @@
           <li class="nav__item"><a href="#">Контакты</a></li>
           <li class="nav__item"><a href="#">Задать вопрос</a></li>
         </ul>
-        <button class="page-header__login button">Войти в Интернет-банк</button>
+        <button class="page-header__login">Войти в Интернет-банк</button>
       </div>
     </header>
     <main>
@@ -58,8 +58,10 @@
                 <div class="credit__first-payment-block">
                   <label for="credit__first-payment">Первоначальный взнос</label>
                   <input type="text" id="credit__first-payment" placeholder="200 000 рублей">
-                  <!-- div.credit__first-payment -->
-                </div>
+                  <div class="credit__first-payment-slider">
+                    <input type="range" min="10" max="100" step="5">
+                  </div>
+                  </div>
                 <div class="credit__time-block">
                   <label for="credit__time">Срок кредитования</label>
                   <input type="text" id="credit__time" placeholder="5 лет">
