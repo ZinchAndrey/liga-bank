@@ -21,6 +21,10 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 70px;
+
+  span {
+    color: $grey-text;
+  }
 }
 
 // .credit__container {
@@ -126,12 +130,17 @@ select {
       background-color: $blue;
       cursor: pointer;
       transition: 0.5s;
+      position: relative;
       /* stylelint-enable */
 
       &:hover {
         background-color: lighten($blue, 10%);
       }
     }
+  }
+
+  span {
+    margin-top: 8px;
   }
 }
 

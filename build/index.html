@@ -39,7 +39,7 @@
               <fieldset class="credit__goal">
                 <h3>Шаг 1. Цель кредита</h3>
                 <select name="goal" id="goal" aria-placeholder="Выберите цель кредита">
-                  <option value="hypothec">Ипотченое кредитование</option>
+                  <option value="hypothec">Ипотечное кредитование</option>
                   <option value="auto">Автомобильное кредитование</option>
                   <option value="consumer">Потребительский кредит</option>
                 </select>
@@ -59,7 +59,8 @@
                   <label for="credit__first-payment">Первоначальный взнос</label>
                   <input type="text" id="credit__first-payment" placeholder="200 000 рублей">
                   <div class="credit__first-payment-slider">
-                    <input type="range" min="10" max="100" step="5">
+                    <input id="credit__first-payment-slider-input" type="range" min="10" max="100" step="5" value="10">
+                    <span class="credit__first-payment-percent" id="credit__first-payment-percent">10%</span>
                   </div>
                   </div>
                 <div class="credit__time-block">
@@ -173,5 +174,6 @@
         </ul>
       </div>
     </footer>
+    <script src="js/main.js"></script>
   </body>
 </html>
