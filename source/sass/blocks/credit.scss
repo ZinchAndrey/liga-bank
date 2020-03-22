@@ -1,13 +1,173 @@
 .credit {
+  padding: 0 15px;
+  color: $black-text;
+
   h2 {
-    font-family: $roboto-medium;
+    font-family: $roboto;
     font-weight: bold;
     font-size: 41px;
     line-height: 140%;
+    margin-bottom: 70px;
+  }
+
+  h3 {
+    font-size: 22px;
+    line-height: 140%;
+    margin-top: 0;
   }
 }
 
-.credit__container {
-  border: 1px solid black; //временно
-  min-height: 500px; //временно
+.credit__form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 70px;
+}
+
+// .credit__container {
+//   // border: 1px solid black; //временно
+//   // min-height: 500px; //временно
+// }
+
+.credit__goal,
+.credit__parameters {
+  padding: 0;
+  width: 600px;
+  border: none;
+
+  h3 {
+    margin-bottom: 30px;
+  }
+}
+
+label {
+  font-size: 16px;
+  line-height: 140%;
+  color: $dark-grey-text;
+  display: block;
+  margin-bottom: 15px;
+}
+
+span {
+  display: block;
+}
+
+input,
+select {
+  width: 100%;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 140%;
+  text-align: center;
+  padding: 15px;
+  border: 1px solid $black-text;
+  border-radius: 4px;
+}
+
+select {
+  margin-bottom: 40px;
+}
+
+.credit__value-block {
+  margin-bottom: 30px;
+}
+
+.credit__value-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.credit__value-button {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: no-repeat center;
+  cursor: pointer;
+
+  @include hover-effect;
+
+  &--minus {
+    left: 22px;
+    background-image: url("../img/minus-icon.svg");
+  }
+
+  &--plus {
+    right: 22px;
+    background-image: url("../img/plus-icon.svg");
+  }
+}
+
+.credit__first-payment-block {
+  margin-bottom: 30px;
+}
+
+.credit__time-block {
+  margin-bottom: 30px;
+}
+
+.credit__mother-capital-block {
+  display: flex;
+  align-items: bo;
+
+  label {
+    margin: 0;
+    cursor: pointer;
+
+    @include hover-effect;
+  }
+
+  label::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background-color: $blue;
+    border-radius: 2px;
+    display: inline-block;
+    margin-right: 8px;
+    position: relative;
+    top: 3px;
+  }
+
+  input:checked + label::before {
+    background-image: url("../img/checked-icon.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+// Блок "Наше предложение"
+.credit__offer {
+  border: none;
+  width: 500px;
+  padding: 60px;
+  background-color: $grey;
+  align-self: flex-start;
+}
+
+.credit__offer-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.credit__offer-value {
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 140%;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.credit__offer-label {
+  font-size: 16px;
+  line-height: 140%;
+  color: $dark-grey-text;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+.credit__offer-button {
+  width: 100%;
 }

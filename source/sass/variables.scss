@@ -1,7 +1,7 @@
 //шрифты
-$roboto: "Roboto Regular", "Arial", sans-serif;
-$roboto-medium: "Roboto Medium", "Arial", sans-serif;
-$roboto-bold: "Roboto Bold", "Arial", sans-serif;
+$roboto: "Roboto", "Arial", sans-serif;
+// $roboto-medium: "Roboto Medium", "Arial", sans-serif;
+// $roboto-bold: "Roboto Bold", "Arial", sans-serif;
 
 // цвета
 $white: #ffffff;
@@ -9,6 +9,8 @@ $black-text: #1f1e25;
 $blue: #2c36f2;
 $grey: #f6f7ff;
 $grey-text: #707c87;
+$dark-grey-text: #394959;
+$grey-border: #c4c4c4;
 
 @mixin button-style-none() {
   border: none;
@@ -41,6 +43,13 @@ $grey-text: #707c87;
 }
 
 .button {
-  background-color: inherit;
   border: none;
+  cursor: pointer;
+  background-color: $blue;
+  color: $grey;
+  padding: 20px;
+  border-radius: 4px;
+  margin: 0 auto;
+
+  @include hover-effect;
 }

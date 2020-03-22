@@ -1,0 +1,56 @@
+.final-form {
+  padding: 70px;
+  background-color: $grey;
+  width: 770px;
+  margin: 0 auto;
+
+  h3 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+}
+
+.final-form__list {
+  margin-bottom: 30px;
+}
+
+.final-form__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  align-items: center;
+  border-bottom: 1px solid $grey-border;
+}
+
+.final-form__value {
+  font-size: 22px;
+  line-height: 140%;
+  font-weight: bold;
+}
+
+.final-form__label {
+  font-size: 16px;
+  line-height: 140%;
+  color: $dark-grey-text;
+}
+
+.final-form__input-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  input {
+    margin-bottom: 30px;
+    background-color: inherit;
+  }
+
+  .final-form__tel,
+  .final-form__email {
+    margin-bottom: 40px;
+    width: 45%;
+  }
+}
+
+.final-form__button {
+  width: 200px;
+}

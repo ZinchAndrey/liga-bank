@@ -7,12 +7,9 @@
     <title>Liga bank</title>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <link href="fonts/Roboto-Regular.woff2" as="font" crossorigin="anonymous">
-    <link href="fonts/Roboto-Regular.woff" rel="preload" as="font" crossorigin="anonymous">
-    <link href="fonts/Roboto-Medium.woff2" as="font" crossorigin="anonymous">
-    <link href="fonts/Roboto-Medium.woff" rel="preload" as="font" crossorigin="anonymous">
-    <link href="fonts/Roboto-Bold.woff2" as="font" crossorigin="anonymous">
-    <link href="fonts/Roboto-Bold.woff" rel="preload" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Regular.woff2" rel="preload" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Medium.woff2" rel="preload" as="font" crossorigin="anonymous">
+    <link href="fonts/Roboto-Bold.woff2" rel="preload" as="font" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.min.css" />
   </head>
   <body>
@@ -37,32 +34,43 @@
       <section class="credit">
         <div class="credit__container container">
           <h2>Кредитный калькулятор</h2>
-          <form class="form__credit" action="#" method="post" id="credit-form">
-            <fieldset class="credit__goal">
-              <h3>Шаг 1. Цель кредита</h3>
-              <select name="goal" id="goal" aria-placeholder="Выберите цель кредита">
-                <option value="hypothec">Ипотченое кредитование</option>
-                <option value="auto">Автомобильное кредитование</option>
-                <option value="consumer">Потребительский кредит</option>
-              </select>
-            </fieldset>
-            <fieldset class="credit__parameters">
-              <h3>Шаг 2. Введите параметры кредита</h3>
-              <label for="credit__value">Стоимость недвижимости</label>
-              <button class="credit__value-button credit__value-button--minus">-</button>
-              <input type="text" id="credit__value">
-              <button class="credit__value-button credit__value-button--plus">+</button>
-              <span>От 1 200 000 до 25 000 000 рублей</span>
+          <form class="credit__form" action="#" method="post" id="credit-form">
+            <div class="credit__form-wrapper">
+              <fieldset class="credit__goal">
+                <h3>Шаг 1. Цель кредита</h3>
+                <select name="goal" id="goal" aria-placeholder="Выберите цель кредита">
+                  <option value="hypothec">Ипотченое кредитование</option>
+                  <option value="auto">Автомобильное кредитование</option>
+                  <option value="consumer">Потребительский кредит</option>
+                </select>
+              </fieldset>
+              <fieldset class="credit__parameters">
+                <h3>Шаг 2. Введите параметры кредита</h3>
+                <label for="credit__value">Стоимость недвижимости</label>
+                <div class="credit__value-block">
+                  <div class="credit__value-wrapper">
+                    <button class="credit__value-button credit__value-button--minus"></button>
+                    <input type="text" id="credit__value" placeholder="2 000 000 рублей">
+                    <button class="credit__value-button credit__value-button--plus"></button>
+                  </div>
+                  <span>От 1 200 000 до 25 000 000 рублей</span>
+                </div>
+                <div class="credit__first-payment-block">
+                  <label for="credit__first-payment">Первоначальный взнос</label>
+                  <input type="text" id="credit__first-payment" placeholder="200 000 рублей">
+                  <!-- div.credit__first-payment -->
+                </div>
+                <div class="credit__time-block">
+                  <label for="credit__time">Срок кредитования</label>
+                  <input type="text" id="credit__time" placeholder="5 лет">
+                </div>
 
-              <label for="credit__first-payment">Первоначальный взнос</label>
-              <input type="text" id="credit__first-payment">
-              <!-- div.credit__first-payment -->
-              <label for="credit__time">Срок кредитования</label>
-              <input type="text" id="credit__time">
-
-              <input type="checkbox" id="credit__mother-capital">
-              <label for="credit__mother-capital">Использовать материнский капитал</label>
-            </fieldset>
+                <div class="credit__mother-capital-block">
+                  <input class="visually-hidden" type="checkbox" id="credit__mother-capital">
+                  <label for="credit__mother-capital">Использовать материнский капитал</label>
+                </div>
+              </fieldset>
+            </div>
             <fieldset class="credit__offer">
               <div class="credit__offer-container">
                 <h3>Наше предложение</h3>
@@ -84,9 +92,40 @@
                     <p class="credit__offer-label">Необходимый доход</p>
                   </li>
                 </ul>
-                <button class="credit__offer-button">Оформить заявку</button>
+                <button class="credit__offer-button button">Оформить заявку</button>
               </div>
             </fieldset>
+          </form>
+          <form class="credit__final-form final-form" action="#" method="post">
+            <h3>Шаг 3. Оформление заявки</h3>
+            <ul class="final-form__list">
+              <li class="final-form__item">
+                <span class="final-form__label">Номер заявки</span>
+                <span class="final-form__value">№ 0010</span>
+              </li>
+              <li class="final-form__item">
+                <span class="final-form__label">Цель кредита</span>
+                <span class="final-form__value">Ипотека</span>
+              </li>
+              <li class="final-form__item">
+                <span class="final-form__label">Стоимость недвижимости</span>
+                <span class="final-form__value">2 000 000 рублей</span>
+              </li>
+              <li class="final-form__item">
+                <span class="final-form__label">Первоначальный взнос</span>
+                <span class="final-form__value">200 000 рублей</span>
+              </li>
+              <li class="final-form__item">
+                <span class="final-form__label">Срок кредитования</span>
+                <span class="final-form__value">5 лет</span>
+              </li>
+            </ul>
+            <div class="final-form__input-wrapper">
+              <input class="final-form__name" type="text" placeholder="ФИО">
+              <input class="final-form__tel" type="tel" placeholder="Телефон">
+              <input class="final-form__email" type="email" placeholder="E-mail">
+              <button class="final-form__button button" type="submit">Отправить</button>
+            </div>
           </form>
         </div>
       </section>
