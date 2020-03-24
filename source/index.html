@@ -50,14 +50,14 @@
                 <div class="credit__value-block">
                   <div class="credit__value-wrapper">
                     <button class="credit__value-button credit__value-button--minus"></button>
-                    <input type="text" id="credit__value" placeholder="2 000 000 рублей">
+                    <input type="text" id="credit__value" placeholder="2 000 000 рублей" value="2000000">
                     <button class="credit__value-button credit__value-button--plus"></button>
                   </div>
                   <span>От 1 200 000 до 25 000 000 рублей</span>
                 </div>
                 <div class="credit__first-payment-block">
                   <label for="credit__first-payment">Первоначальный взнос</label>
-                  <input type="text" id="credit__first-payment" placeholder="200 000 рублей">
+                  <input type="text" id="credit__first-payment-input" placeholder="200 000 рублей" value="200000">
                   <div class="credit__first-payment-slider">
                     <input id ="credit__first-payment-slider-input" type="range" min="10" max="100" step="5" value="10">
                     <span class="credit__first-payment-percent" id="credit__first-payment-percent">10%</span>
@@ -65,9 +65,12 @@
                   </div>
                 <div class="credit__time-block">
                   <label for="credit__time">Срок кредитования</label>
-                  <input type="text" id="credit__time" placeholder="5 лет">
+                  <input type="text" id="credit__time-input" placeholder="5 лет" value="5">
+                  <div class="credit__time-slider">
+                    <input id ="credit__time-slider-input" type="range" min="5" max="30" step="1" value="5">
+                    <span class="credit__time-text" id="credit__time-text">5 лет</span>
+                  </div>
                 </div>
-
                 <div class="credit__mother-capital-block">
                   <input class="visually-hidden" type="checkbox" id="credit__mother-capital">
                   <label for="credit__mother-capital">Использовать материнский капитал</label>
@@ -79,19 +82,19 @@
                 <h3>Наше предложение</h3>
                 <ul class="credit__offer-list">
                   <li class="credit__offer-item">
-                    <p class="credit__offer-value">1 330 000 рублей</p>
+                    <p class="credit__offer-value" id="offer-credit-value">1 330 000 рублей</p>
                     <p class="credit__offer-label">Сумма ипотеки</p>
                   </li>
                   <li class="credit__offer-item">
-                    <p class="credit__offer-value">27 868 рублей</p>
-                    <p class="credit__offer-label">Ежемесячный платеж</p>
-                  </li>
-                  <li class="credit__offer-item">
-                    <p class="credit__offer-value">9,40%</p>
+                    <p class="credit__offer-value" id="percent-rate">9,40%</p>
                     <p class="credit__offer-label">Процентная ставка</p>
                   </li>
                   <li class="credit__offer-item">
-                    <p class="credit__offer-value">61 929 рублей</p>
+                    <p class="credit__offer-value" id="month-payment">27 868 рублей</p>
+                    <p class="credit__offer-label">Ежемесячный платеж</p>
+                  </li>
+                  <li class="credit__offer-item">
+                    <p class="credit__offer-value" id="required-profit">61 929 рублей</p>
                     <p class="credit__offer-label">Необходимый доход</p>
                   </li>
                 </ul>
