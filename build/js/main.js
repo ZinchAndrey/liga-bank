@@ -69,12 +69,23 @@ var goal = document.querySelector('#goal');
 var creditLabel = document.querySelector('#credit-label');
 var creditLimitsLabel = document.querySelector('#credit-limits-label');
 var creditStep = CreditStep['HYPOTHEC'];
+var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
 
 function changeLabels(creditType) {
   if (goal.value === CreditGoal[creditType]) {
     creditLabel.textContent = CretidLabel[creditType];
     creditLimitsLabel.textContent = CreditLimits[creditType];
     creditStep = CreditStep[creditType];
+
+    // установка атрибутов ползунка срока кредита
+    creditTimeSlider.setAttribute('min', CreditTimeMin[creditType]);
+    creditTimeSlider.setAttribute('max', CreditTimeMax[creditType]);
+    creditTimeSlider.setAttribute('value', CreditTimeMin[creditType]);
+
+    // установка атрибутов ползунка с процентами
+    firstPaymentSlider.setAttribute('min', CreditPercentMin[creditType]);
+    firstPaymentSlider.setAttribute('max', CreditPercentMax[creditType]);
+    firstPaymentSlider.setAttribute('value', CreditPercentMin[creditType]);
   }
 }
 
@@ -82,6 +93,11 @@ goal.addEventListener('change', function () {
   changeLabels('HYPOTHEC');
   changeLabels('AUTOCREDIT');
   changeLabels('CONSUMER');
+  if (goal.value === CreditGoal['CONSUMER']) {
+    firstPaymentBlock.classList.add('credit__first-payment-block--closed');
+  } else {
+    firstPaymentBlock.classList.remove('credit__first-payment-block--closed');
+  }
 });
 
 // размер кредита
