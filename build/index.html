@@ -99,11 +99,11 @@
                     <p class="credit__offer-label">Необходимый доход</p>
                   </li>
                 </ul>
-                <button class="credit__offer-button button">Оформить заявку</button>
+                <button class="credit__offer-button button" type="submit">Оформить заявку</button>
               </div>
             </fieldset>
           </form>
-          <form class="credit__final-form final-form" action="#" method="post">
+          <form class="credit__final-form final-form final-form--closed" action="#" method="post">
             <h3>Шаг 3. Оформление заявки</h3>
             <ul class="final-form__list">
               <li class="final-form__item">
@@ -112,19 +112,19 @@
               </li>
               <li class="final-form__item">
                 <span class="final-form__label">Цель кредита</span>
-                <span class="final-form__value">Ипотека</span>
+                <span class="final-form__value" id="final-form__credit-type">Ипотека</span>
               </li>
               <li class="final-form__item">
-                <span class="final-form__label">Стоимость недвижимости</span>
-                <span class="final-form__value">2 000 000 рублей</span>
+                <span class="final-form__label" id="final-form__credit-label">Стоимость недвижимости</span>
+                <span class="final-form__value" id="final-form__credit-value">2 000 000 рублей</span>
               </li>
-              <li class="final-form__item">
+              <li class="final-form__item final-form__item--first-payment">
                 <span class="final-form__label">Первоначальный взнос</span>
-                <span class="final-form__value">200 000 рублей</span>
+                <span class="final-form__value" id="final-form__first-payment">200 000 рублей</span>
               </li>
               <li class="final-form__item">
                 <span class="final-form__label">Срок кредитования</span>
-                <span class="final-form__value">5 лет</span>
+                <span class="final-form__value" id="final-form__credit-time">5 лет</span>
               </li>
             </ul>
             <div class="final-form__input-wrapper">

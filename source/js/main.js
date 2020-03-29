@@ -14,8 +14,10 @@ var MOTH_CAP = 470000;
 var CreditSettings = {
   hypothec: {
     CREDIT_GOAL: 'hypothec',
+    CREDIT_GOAL_RU: 'Ипотека',
     CREDIT_STEP: 100000,
     CREDIT_LABEL: 'Стоимость недвижимости',
+    CREDIT_OFFER_LABEL: 'Сумма ипотеки',
     CREDIT_LIMITS: 'От 1 200 000 до 25 000 000 рублей',
     CREDIT_TIME_MIN: 5,
     CREDIT_TIME_MAX: 30,
@@ -24,8 +26,10 @@ var CreditSettings = {
   },
   autocredit: {
     CREDIT_GOAL: 'autocredit',
+    CREDIT_GOAL_RU: 'Автокредит',
     CREDIT_STEP: 50000,
     CREDIT_LABEL: 'Стоимость автомобиля',
+    CREDIT_OFFER_LABEL: 'Сумма автокредита',
     CREDIT_LIMITS: 'От 500 000 рублей до 5 000 000 рублей',
     CREDIT_TIME_MIN: 1,
     CREDIT_TIME_MAX: 5,
@@ -34,8 +38,10 @@ var CreditSettings = {
   },
   consumer: {
     CREDIT_GOAL: 'consumer',
+    CREDIT_GOAL_RU: 'Потребительский кредит',
     CREDIT_STEP: 50000,
     CREDIT_LABEL: 'Сумма потребительского кредита',
+    CREDIT_OFFER_LABEL: 'Сумма кредита',
     CREDIT_LIMITS: 'От 50 000 рублей до 3 000 000 рублей',
     CREDIT_TIME_MIN: 1,
     CREDIT_TIME_MAX: 7,
@@ -44,93 +50,13 @@ var CreditSettings = {
   },
 };
 
-// шаг кредита
-var CreditStep = {
-  HYPOTHEC: 100000,
-  AUTOCREDIT: 50000,
-  CONSUMER: 50000
-};
-
-// цели кредита
-var CreditGoal = {
-  HYPOTHEC: 'hypothec',
-  AUTOCREDIT: 'autocredit',
-  CONSUMER: 'consumer'
-};
-
-// подписи
-var CretidLabel = {
-  HYPOTHEC: 'Стоимость недвижимости',
-  AUTOCREDIT: 'Стоимость автомобиля',
-  CONSUMER: 'Сумма потребительского кредита'
-};
-
-var CreditLimits = {
-  HYPOTHEC: 'От 1 200 000 до 25 000 000 рублей',
-  AUTOCREDIT: 'От 500 000 рублей до 5 000 000 рублей',
-  CONSUMER: 'От 50 000 рублей до 3 000 000 рублей'
-};
-
-// временные рамки
-var CreditTimeMin = {
-  HYPOTHEC: 5,
-  AUTOCREDIT: 1,
-  CONSUMER: 1
-};
-
-var CreditTimeMax = {
-  HYPOTHEC: 30,
-  AUTOCREDIT: 5,
-  CONSUMER: 7
-};
-
-// пределы по процентам
-var CreditPercentMin = {
-  HYPOTHEC: 10,
-  AUTOCREDIT: 20,
-  CONSUMER: 0
-};
-
-var CreditPercentMax = {
-  HYPOTHEC: 100,
-  AUTOCREDIT: 100,
-  CONSUMER: 0
-};
-
 // цель кредита
 var goal = document.querySelector('#goal');
 var creditLabel = document.querySelector('#credit-label');
 var creditLimitsLabel = document.querySelector('#credit-limits-label');
+var creditOfferLabel = document.querySelector('.credit__offer-label');
 var creditStep = CreditSettings.hypothec.CREDIT_STEP;
 var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
-
-function changeLabels(creditType) {
-  creditLabel.textContent = CretidLabel[creditType];
-  creditLimitsLabel.textContent = CreditLimits[creditType];
-  creditStep = CreditStep[creditType];
-
-  // установка атрибутов ползунка срока кредита
-  creditTimeSlider.setAttribute('min', CreditTimeMin[creditType]);
-  creditTimeSlider.setAttribute('max', CreditTimeMax[creditType]);
-  creditTimeSlider.setAttribute('value', CreditTimeMin[creditType]);
-  creditTimeSlider.value = CreditTimeMin[creditType];
-
-  // установка атрибутов ползунка с процентами
-  firstPaymentSlider.setAttribute('min', CreditPercentMin[creditType]);
-  firstPaymentSlider.setAttribute('max', CreditPercentMax[creditType]);
-  firstPaymentSlider.value = CreditPercentMin[creditType];
-  getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
-}
-
-goal.addEventListener('change', function (evt) {
-  changeLabels(evt.currentTarget.value.toUpperCase()); // evt.currentTarget = goal.value
-
-  if (goal.value === CreditGoal['CONSUMER']) {
-    firstPaymentBlock.classList.add('credit__first-payment-block--closed');
-  } else {
-    firstPaymentBlock.classList.remove('credit__first-payment-block--closed');
-  }
-});
 
 // размер кредита
 var creditForm = document.querySelector('#credit-form');
@@ -148,14 +74,16 @@ var firstPaymentPercent = document.querySelector('#credit__first-payment-percent
 var creditTimeInput = document.querySelector('#credit__time-input');
 var creditTimeSlider = document.querySelector('#credit__time-slider-input');
 var creditTimeText = document.querySelector('#credit__time-text');
-// var years; // срок ипотеки
-// var months; // количество месяцев за срок кредита
 
 // предложение
 var offerPercentRate = document.querySelector('#percent-rate');
 var offerMonthPayment = document.querySelector('#month-payment');
 var offerRequiredProfit = document.querySelector('#required-profit');
 var offerCreditValue = document.querySelector('#offer-credit-value');
+var requestButton = document.querySelector('.credit__offer-button');
+
+// финальная форма - шаг 3
+var finalForm = document.querySelector('.final-form');
 
 // остальное
 var motherCapital = document.querySelector('#credit__mother-capital');
@@ -163,6 +91,27 @@ var percentRate; // начальное значение процентной с�
 var percentRateMonth; // процентная ставка в месяц
 var monthPayment; // ежемесячный платеж
 var requiredProfit; // требуемый доход
+
+// переводит значение ползунка в связанный input
+function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
+  inputField.value = sliderInput.value;
+  sliderLabel.textContent = sliderInput.value + dimension;
+}
+
+// изменение срока кредита
+function onInputCreditTime() {
+  creditTimeSlider.addEventListener('input', function () {
+    getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+  });
+}
+
+// изменение первоначального взноса
+function onInputFirstPayment() {
+  firstPaymentSlider.addEventListener('input', function () {
+    getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
+    firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+  });
+}
 
 // добавляет в разметку значения по кредиту
 function showOffer(element, value, dimension) {
@@ -177,6 +126,11 @@ function reCalculate() {
   } else {
     percentRate = PERCENT_MIN;
   }
+
+  // пересчет значений в слайдере
+  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+  getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
+  firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
 
   if (motherCapital.checked) {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
@@ -199,12 +153,58 @@ function reCalculate() {
   showOffer(offerRequiredProfit, requiredProfit, ' рублей');
 }
 
-// переводит значение ползунка в связанный input
-function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
-  inputField.value = sliderInput.value;
-  sliderLabel.textContent = sliderInput.value + dimension;
+// меняет подписи в зависимости от типа кредита
+function changeLabels(creditType) {
+  creditLabel.textContent = CreditSettings[creditType].CREDIT_LABEL;
+  creditLimitsLabel.textContent = CreditSettings[creditType].CREDIT_LIMITS;
+  creditStep = CreditSettings[creditType].CREDIT_STEP;
+  creditOfferLabel.textContent = CreditSettings[creditType].CREDIT_OFFER_LABEL;
+
+  // установка атрибутов ползунка срока кредита
+  creditTimeSlider.setAttribute('min', CreditSettings[creditType].CREDIT_TIME_MIN);
+  creditTimeSlider.setAttribute('max', CreditSettings[creditType].CREDIT_TIME_MAX);
+  creditTimeSlider.setAttribute('value', CreditSettings[creditType].CREDIT_TIME_MIN);
+  creditTimeSlider.value = CreditSettings[creditType].CREDIT_TIME_MIN;
+
+  // установка атрибутов ползунка с процентами
+  firstPaymentSlider.setAttribute('min', CreditSettings[creditType].CREDIT_PERCENT_MIN);
+  firstPaymentSlider.setAttribute('max', CreditSettings[creditType].CREDIT_PERCENT_MAX);
+  firstPaymentSlider.setAttribute('value', CreditSettings[creditType].CREDIT_PERCENT_MIN);
+  firstPaymentSlider.value = CreditSettings[creditType].CREDIT_PERCENT_MIN;
 }
 
+// меняет поля в блоке шаг 3
+function changeFinalForm() {
+  var finalFormCreditType = document.querySelector('#final-form__credit-type');
+  var finalFormCreditValue = document.querySelector('#final-form__credit-value');
+  var finalFormFirstPayment = document.querySelector('#final-form__first-payment');
+  var finalFormCreditTime = document.querySelector('#final-form__credit-time');
+  var finalFormCreditLabel = document.querySelector('#final-form__credit-label');
+  var finalFormFirstPaymentBlock = document.querySelector('.final-form__item--first-payment');
+
+  finalFormCreditType.textContent = CreditSettings[goal.value].CREDIT_GOAL_RU;
+  finalFormCreditValue.textContent = creditValueInput.value + ' рублей';
+  finalFormFirstPayment.textContent = firstPaymentInput.value + ' рублей';
+  finalFormCreditTime.textContent = creditTimeInput.value + ' лет';
+  finalFormCreditLabel.textContent = CreditSettings[goal.value].CREDIT_LABEL;
+
+  if (goal.value === 'consumer') {
+    finalFormFirstPaymentBlock.classList.add('final-form__item--closed');
+  } else {
+    finalFormFirstPaymentBlock.classList.remove('final-form__item--closed');
+  }
+}
+
+goal.addEventListener('change', function (evt) {
+  changeLabels(evt.currentTarget.value); // evt.currentTarget = goal.value
+  reCalculate();
+
+  if (goal.value === CreditSettings.consumer.CREDIT_GOAL) {
+    firstPaymentBlock.classList.add('credit__first-payment-block--closed');
+  } else {
+    firstPaymentBlock.classList.remove('credit__first-payment-block--closed');
+  }
+});
 
 creditForm.addEventListener('input', reCalculate);
 
@@ -221,13 +221,18 @@ creditMinusButton.addEventListener('click', function (evt) {
   reCalculate();
 });
 
-// изменение срока кредита
-creditTimeSlider.addEventListener('input', function () {
-  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
-});
-
-// изменение первоначального взноса
 firstPaymentSlider.addEventListener('input', function () {
   getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
   firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
 });
+
+requestButton.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  finalForm.classList.remove('final-form--closed');
+  changeFinalForm();
+});
+
+onInputFirstPayment();
+onInputCreditTime();
+
+
