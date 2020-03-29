@@ -173,6 +173,7 @@ function changeLabels(creditType) {
   firstPaymentSlider.value = CreditSettings[creditType].CREDIT_PERCENT_MIN;
 }
 
+var requestNumber = 1;
 // меняет поля в блоке шаг 3
 function changeFinalForm() {
   var finalFormCreditType = document.querySelector('#final-form__credit-type');
@@ -181,18 +182,27 @@ function changeFinalForm() {
   var finalFormCreditTime = document.querySelector('#final-form__credit-time');
   var finalFormCreditLabel = document.querySelector('#final-form__credit-label');
   var finalFormFirstPaymentBlock = document.querySelector('.final-form__item--first-payment');
+  var finalFormRequestNumber = document.querySelector('#credit-request-number');
+  var requestNumberText = '0000' + Number(requestNumber);
+
+  // local storage
+  localStorage.setItem('requestNumber', Number(requestNumber) + 1);
+  requestNumber = localStorage.getItem('requestNumber');
 
   finalFormCreditType.textContent = CreditSettings[goal.value].CREDIT_GOAL_RU;
   finalFormCreditValue.textContent = creditValueInput.value + ' рублей';
   finalFormFirstPayment.textContent = firstPaymentInput.value + ' рублей';
   finalFormCreditTime.textContent = creditTimeInput.value + ' лет';
   finalFormCreditLabel.textContent = CreditSettings[goal.value].CREDIT_LABEL;
+  finalFormRequestNumber.textContent = '№ ' + requestNumberText.slice(-4);
 
   if (goal.value === 'consumer') {
     finalFormFirstPaymentBlock.classList.add('final-form__item--closed');
   } else {
     finalFormFirstPaymentBlock.classList.remove('final-form__item--closed');
   }
+
+
 }
 
 goal.addEventListener('change', function (evt) {
