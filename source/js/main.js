@@ -11,6 +11,39 @@ var MONTHS_PER_YEAR = 12;
 var REQUIRED_PROFIT_RATIO = 0.45;
 var MOTH_CAP = 470000;
 
+var CreditSettings = {
+  hypothec: {
+    CREDIT_GOAL: 'hypothec',
+    CREDIT_STEP: 100000,
+    CREDIT_LABEL: 'Стоимость недвижимости',
+    CREDIT_LIMITS: 'От 1 200 000 до 25 000 000 рублей',
+    CREDIT_TIME_MIN: 5,
+    CREDIT_TIME_MAX: 30,
+    CREDIT_PERCENT_MIN: 10,
+    CREDIT_PERCENT_MAX: 100,
+  },
+  autocredit: {
+    CREDIT_GOAL: 'autocredit',
+    CREDIT_STEP: 50000,
+    CREDIT_LABEL: 'Стоимость автомобиля',
+    CREDIT_LIMITS: 'От 500 000 рублей до 5 000 000 рублей',
+    CREDIT_TIME_MIN: 1,
+    CREDIT_TIME_MAX: 5,
+    CREDIT_PERCENT_MIN: 20,
+    CREDIT_PERCENT_MAX: 100,
+  },
+  consumer: {
+    CREDIT_GOAL: 'consumer',
+    CREDIT_STEP: 50000,
+    CREDIT_LABEL: 'Сумма потребительского кредита',
+    CREDIT_LIMITS: 'От 50 000 рублей до 3 000 000 рублей',
+    CREDIT_TIME_MIN: 1,
+    CREDIT_TIME_MAX: 7,
+    CREDIT_PERCENT_MIN: 0,
+    CREDIT_PERCENT_MAX: 0,
+  },
+};
+
 // шаг кредита
 var CreditStep = {
   HYPOTHEC: 100000,
@@ -68,31 +101,30 @@ var CreditPercentMax = {
 var goal = document.querySelector('#goal');
 var creditLabel = document.querySelector('#credit-label');
 var creditLimitsLabel = document.querySelector('#credit-limits-label');
-var creditStep = CreditStep['HYPOTHEC'];
+var creditStep = CreditSettings.hypothec.CREDIT_STEP;
 var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
 
 function changeLabels(creditType) {
-  if (goal.value === CreditGoal[creditType]) {
-    creditLabel.textContent = CretidLabel[creditType];
-    creditLimitsLabel.textContent = CreditLimits[creditType];
-    creditStep = CreditStep[creditType];
+  creditLabel.textContent = CretidLabel[creditType];
+  creditLimitsLabel.textContent = CreditLimits[creditType];
+  creditStep = CreditStep[creditType];
 
-    // установка атрибутов ползунка срока кредита
-    creditTimeSlider.setAttribute('min', CreditTimeMin[creditType]);
-    creditTimeSlider.setAttribute('max', CreditTimeMax[creditType]);
-    creditTimeSlider.setAttribute('value', CreditTimeMin[creditType]);
+  // установка атрибутов ползунка срока кредита
+  creditTimeSlider.setAttribute('min', CreditTimeMin[creditType]);
+  creditTimeSlider.setAttribute('max', CreditTimeMax[creditType]);
+  creditTimeSlider.setAttribute('value', CreditTimeMin[creditType]);
+  creditTimeSlider.value = CreditTimeMin[creditType];
 
-    // установка атрибутов ползунка с процентами
-    firstPaymentSlider.setAttribute('min', CreditPercentMin[creditType]);
-    firstPaymentSlider.setAttribute('max', CreditPercentMax[creditType]);
-    firstPaymentSlider.setAttribute('value', CreditPercentMin[creditType]);
-  }
+  // установка атрибутов ползунка с процентами
+  firstPaymentSlider.setAttribute('min', CreditPercentMin[creditType]);
+  firstPaymentSlider.setAttribute('max', CreditPercentMax[creditType]);
+  firstPaymentSlider.value = CreditPercentMin[creditType];
+  getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
 }
 
-goal.addEventListener('change', function () {
-  changeLabels('HYPOTHEC');
-  changeLabels('AUTOCREDIT');
-  changeLabels('CONSUMER');
+goal.addEventListener('change', function (evt) {
+  changeLabels(evt.currentTarget.value.toUpperCase()); // evt.currentTarget = goal.value
+
   if (goal.value === CreditGoal['CONSUMER']) {
     firstPaymentBlock.classList.add('credit__first-payment-block--closed');
   } else {
@@ -132,39 +164,13 @@ var percentRateMonth; // процентная ставка в месяц
 var monthPayment; // ежемесячный платеж
 var requiredProfit; // требуемый доход
 
-// увеличение и уменьшение суммы кредита по клику
-creditPlusButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  creditValueInput.value = Number(creditValueInput.value) + creditStep;
-});
-
-creditMinusButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  creditValueInput.value = Number(creditValueInput.value) - creditStep;
-});
-
-function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
-  inputField.value = sliderInput.value;
-  sliderLabel.textContent = sliderInput.value + dimension;
-}
-
-// функция добавления в разметку значений по кредиту
+// добавляет в разметку значения по кредиту
 function showOffer(element, value, dimension) {
   element.textContent = value + dimension;
 }
 
-// изменение срока кредита
-creditTimeSlider.addEventListener('input', function () {
-  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
-});
-
-// изменение первоначального взноса
-firstPaymentSlider.addEventListener('input', function () {
-  getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
-  firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
-});
-
-creditForm.addEventListener('input', function () {
+// пересчитывает значения в разделе "Наше предложение"
+function reCalculate() {
   // изменение процентной ставки
   if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
     percentRate = PERCENT_MAX;
@@ -183,7 +189,6 @@ creditForm.addEventListener('input', function () {
 
   // вывод в HTML разметку полученных значений в раздел "Наше предложение"
   showOffer(offerPercentRate, percentRate, '%');
-
   showOffer(offerCreditValue, creditSum, ' рублей');
 
   percentRateMonth = percentRate * PERCENT_COEF / MONTHS_PER_YEAR;
@@ -192,6 +197,37 @@ creditForm.addEventListener('input', function () {
 
   requiredProfit = Math.trunc(monthPayment / REQUIRED_PROFIT_RATIO);
   showOffer(offerRequiredProfit, requiredProfit, ' рублей');
+}
+
+// переводит значение ползунка в связанный input
+function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
+  inputField.value = sliderInput.value;
+  sliderLabel.textContent = sliderInput.value + dimension;
+}
+
+
+creditForm.addEventListener('input', reCalculate);
+
+// увеличение и уменьшение суммы кредита по клику
+creditPlusButton.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  creditValueInput.value = Number(creditValueInput.value) + creditStep;
+  reCalculate();
 });
 
+creditMinusButton.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  creditValueInput.value = Number(creditValueInput.value) - creditStep;
+  reCalculate();
+});
 
+// изменение срока кредита
+creditTimeSlider.addEventListener('input', function () {
+  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+});
+
+// изменение первоначального взноса
+firstPaymentSlider.addEventListener('input', function () {
+  getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
+  firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+});
