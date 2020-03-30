@@ -84,6 +84,10 @@ var requestButton = document.querySelector('.credit__offer-button');
 
 // финальная форма - шаг 3
 var finalForm = document.querySelector('.final-form');
+var finalFormUsername = document.querySelector('[name=username]');
+var finalFormPhone = document.querySelector('[name=phone]');
+var finalFormEmail = document.querySelector('[name=mail]');
+var requestNumber = 1; // начальное значение счетчика заявок
 
 // остальное
 var motherCapital = document.querySelector('#credit__mother-capital');
@@ -173,7 +177,6 @@ function changeLabels(creditType) {
   firstPaymentSlider.value = CreditSettings[creditType].CREDIT_PERCENT_MIN;
 }
 
-var requestNumber = 1;
 // меняет поля в блоке шаг 3
 function changeFinalForm() {
   var finalFormCreditType = document.querySelector('#final-form__credit-type');
@@ -240,6 +243,13 @@ requestButton.addEventListener('click', function (evt) {
   evt.preventDefault();
   finalForm.classList.remove('final-form--closed');
   changeFinalForm();
+});
+
+// добавление в localStorage полей формы
+finalForm.addEventListener('submit', function () {
+  localStorage.setItem = ('username', finalFormUsername.value);
+  localStorage.setItem = ('phone', finalFormPhone.value);
+  localStorage.setItem = ('email', finalFormEmail.value);
 });
 
 onInputFirstPayment();
