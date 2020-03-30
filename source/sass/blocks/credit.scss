@@ -65,6 +65,7 @@ select {
   padding: 15px;
   border: 1px solid $black-text;
   border-radius: 4px;
+  background-color: inherit;
 }
 
 select {
@@ -105,6 +106,10 @@ select {
 
 .credit__first-payment-block {
   margin-bottom: 30px;
+
+  &--closed {
+    display: none;
+  }
 }
 
 // стилизация ползунка  https://www.knlnt.com/les?id=54
