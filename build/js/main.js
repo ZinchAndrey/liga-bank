@@ -96,6 +96,34 @@ var percentRateMonth; // процентная ставка в месяц
 var monthPayment; // ежемесячный платеж
 var requiredProfit; // требуемый доход
 
+// кастомный select
+var activeSelect = document.querySelector('.credit__select-active');
+var selectList = document.querySelector('.credit__select-list');
+var selectItems = document.querySelectorAll('.credit__select-item');
+
+function onCustomSelect() {
+  activeSelect.addEventListener('click', function () {
+    selectList.classList.toggle('credit__select-list--closed');
+    activeSelect.textContent = 'Выберите цель кредита';
+  });
+}
+onCustomSelect();
+
+function makeActiveItem() {
+  for (var i = 0; i < selectItems.length; i++) {
+    selectItems[i].addEventListener('click', function (evt) {
+      activeSelect.textContent = evt.currentTarget.textContent;
+      selectList.classList.add('credit__select-list--closed');
+      // здесь нужен callback видимо
+      for (var j = 0; j < goal.options.length; j++) {
+        if (goal.options[j].value === evt.currentTarget.getAttribute('data-value')) {
+          goal.options[j].selected = true;
+        }
+      }
+    });
+  }
+}
+makeActiveItem();
 // переводит значение ползунка в связанный input
 function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
   inputField.value = sliderInput.value;

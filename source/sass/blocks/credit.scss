@@ -72,6 +72,48 @@ select {
   margin-bottom: 40px;
 }
 
+// отсечка
+.credit__select-block {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 140%;
+  border: 1px solid $black-text;
+  border-radius: 4px;
+  background-color: inherit;
+  margin-bottom: 40px;
+}
+
+.credit__select-active,
+.credit__select-item {
+  margin: 0;
+  padding: 15px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $blue;
+    color: $white;
+  }
+}
+
+.credit__select-item {
+  border-bottom: 1px solid $grey-slider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.credit__select-list {
+  font-weight: normal;
+  border-top: 1px solid $black-text;
+
+  &--closed {
+    display: none;
+  }
+}
+
+// отсечка
+
 .credit__value-block {
   margin-bottom: 30px;
 }
