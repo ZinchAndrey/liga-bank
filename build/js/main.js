@@ -58,6 +58,11 @@ var creditOfferLabel = document.querySelector('.credit__offer-label');
 var creditStep = CreditSettings.hypothec.CREDIT_STEP;
 var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
 
+// кастомный select
+var activeSelect = document.querySelector('.credit__select-active');
+var selectList = document.querySelector('.credit__select-list');
+// var selectItems = document.querySelectorAll('.credit__select-item');
+
 // размер кредита
 var creditForm = document.querySelector('#credit-form');
 var creditPlusButton = document.querySelector('.credit__value-button--plus');
@@ -96,34 +101,48 @@ var percentRateMonth; // процентная ставка в месяц
 var monthPayment; // ежемесячный платеж
 var requiredProfit; // требуемый доход
 
-// кастомный select
-var activeSelect = document.querySelector('.credit__select-active');
-var selectList = document.querySelector('.credit__select-list');
-var selectItems = document.querySelectorAll('.credit__select-item');
-
+// открывает и закрывает список кастомного select
 function onCustomSelect() {
   activeSelect.addEventListener('click', function () {
     selectList.classList.toggle('credit__select-list--closed');
     activeSelect.textContent = 'Выберите цель кредита';
+    changeSelectClass();
   });
 }
-onCustomSelect();
 
-function makeActiveItem() {
-  for (var i = 0; i < selectItems.length; i++) {
-    selectItems[i].addEventListener('click', function (evt) {
-      activeSelect.textContent = evt.currentTarget.textContent;
-      selectList.classList.add('credit__select-list--closed');
-      // здесь нужен callback видимо
-      for (var j = 0; j < goal.options.length; j++) {
-        if (goal.options[j].value === evt.currentTarget.getAttribute('data-value')) {
-          goal.options[j].selected = true;
-        }
-      }
-    });
+// меняет класс выбранного селекта для корректного отображения
+function changeSelectClass() {
+  if (selectList.classList.contains('credit__select-list--closed') === true) {
+    activeSelect.classList.add('credit__select-active--closed');
+  } else {
+    activeSelect.classList.remove('credit__select-active--closed');
   }
 }
-makeActiveItem();
+
+// делает пересчет значений при выборе типа кредита
+function onSelectItemChange() {
+  changeLabels(goal.value); // evt.currentTarget = goal.value
+  reCalculate();
+
+  if (goal.value === CreditSettings.consumer.CREDIT_GOAL) {
+    firstPaymentBlock.classList.add('credit__first-payment-block--closed');
+  } else {
+    firstPaymentBlock.classList.remove('credit__first-payment-block--closed');
+  }
+  changeSelectClass();
+}
+
+// переключает кастомный и настоящий select
+function makeActiveItem() {
+  selectList.addEventListener('click', function (evt) {
+    activeSelect.textContent = evt.target.textContent;
+    selectList.classList.add('credit__select-list--closed');
+    goal.value = evt.target.getAttribute('data-value');
+    onSelectItemChange();
+  });
+
+}
+
 // переводит значение ползунка в связанный input
 function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
   inputField.value = sliderInput.value;
@@ -232,20 +251,7 @@ function changeFinalForm() {
   } else {
     finalFormFirstPaymentBlock.classList.remove('final-form__item--closed');
   }
-
-
 }
-
-goal.addEventListener('change', function (evt) {
-  changeLabels(evt.currentTarget.value); // evt.currentTarget = goal.value
-  reCalculate();
-
-  if (goal.value === CreditSettings.consumer.CREDIT_GOAL) {
-    firstPaymentBlock.classList.add('credit__first-payment-block--closed');
-  } else {
-    firstPaymentBlock.classList.remove('credit__first-payment-block--closed');
-  }
-});
 
 creditForm.addEventListener('input', reCalculate);
 
@@ -280,6 +286,8 @@ finalForm.addEventListener('submit', function () {
   localStorage.setItem = ('email', finalFormEmail.value);
 });
 
+onCustomSelect();
+makeActiveItem();
 onInputFirstPayment();
 onInputCreditTime();
 
