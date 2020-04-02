@@ -108,10 +108,26 @@ function onCustomSelect() {
     selectList.classList.toggle('credit__select-list--closed');
     activeSelect.textContent = 'Выберите цель кредита';
     changeSelectClass();
+
+    // добавляет фокус на список кредитов
+    selectList.focus();
+    onBlurSelect();
   });
 }
 
-// меняет класс выбранного селекта для корректного отображения
+// закрывает список кастомного select при расфокусе
+function onBlurSelect() {
+  selectList.addEventListener('blur', function () {
+    if (selectList.classList.contains('credit__select-list--closed') === false) {
+      selectList.classList.add('credit__select-list--closed');
+      changeSelectClass();
+    }
+  });
+}
+// поместить в onCustomSelect
+// onBlurSelect();
+
+// меняет класс выбранного селекта <p> для корректного отображения рамок
 function changeSelectClass() {
   if (selectList.classList.contains('credit__select-list--closed') === true) {
     activeSelect.classList.add('credit__select-active--closed');

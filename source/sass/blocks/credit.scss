@@ -131,6 +131,11 @@ select {
   &--closed {
     display: none;
   }
+
+  // временно
+  // &:focus {
+  //   background-color: blue;
+  // }
 }
 
 .credit__value-block {
