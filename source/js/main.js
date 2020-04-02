@@ -59,6 +59,7 @@ var creditStep = CreditSettings.hypothec.CREDIT_STEP;
 var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
 
 // кастомный select
+// var selectBlock = document.querySelector('.credit__select-block');
 var activeSelect = document.querySelector('.credit__select-active');
 var selectList = document.querySelector('.credit__select-list');
 // var selectItems = document.querySelectorAll('.credit__select-item');
@@ -137,10 +138,13 @@ function makeActiveItem() {
   selectList.addEventListener('click', function (evt) {
     activeSelect.textContent = evt.target.textContent;
     selectList.classList.add('credit__select-list--closed');
-    goal.value = evt.target.getAttribute('data-value');
+    goal.value = evt.target.dataset.value;
+
     onSelectItemChange();
   });
-
+  // selectBlock.addEventListener('blur', function () {
+  //   alert('test');
+  // });
 }
 
 // переводит значение ползунка в связанный input

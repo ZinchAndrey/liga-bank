@@ -101,10 +101,12 @@ select {
   border-radius: 4px 4px 0 0;
   border: 1px solid $black-text;
   border-bottom: none;
+  background: url("../img/arrow-open-icon.svg") no-repeat right 24px center;
 
   &--closed {
     border-bottom: 1px solid $black-text;
     border-radius: 4px;
+    background-image: url("../img/arrow-closed-icon.svg");
   }
 }
 
