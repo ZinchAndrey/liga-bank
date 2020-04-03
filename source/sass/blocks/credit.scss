@@ -17,10 +17,18 @@
   }
 }
 
+.credit__form-wrapper {
+  margin-right: 30px;
+}
+
 .credit__form {
   display: flex;
   justify-content: space-between;
   margin-bottom: 70px;
+
+  @media (max-width: 1023px) {
+    flex-wrap: wrap;
+  }
 
   span {
     color: $grey-text;
@@ -245,10 +253,20 @@ select {
   align-self: flex-start;
 }
 
+// .credit__offer-container {
+//   min-width: 340px;
+// }
+
 .credit__offer-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.credit__offer-item {
+  @media (max-width: 1150px) {
+    width: 100%;
+  }
 }
 
 .credit__offer-value {
@@ -269,4 +287,16 @@ select {
 
 .credit__offer-button {
   width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .credit {
+    h2 {
+      text-align: center;
+    }
+  }
+
+  .credit__form-wrapper {
+    margin: 0 auto;
+  }
 }

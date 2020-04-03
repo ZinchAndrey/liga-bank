@@ -71,6 +71,18 @@ var creditMinusButton = document.querySelector('.credit__value-button--minus');
 var creditValueInput = document.querySelector('#credit__value');
 var creditSum; // сумма кредита
 
+
+// var im = new Inputmask("999 999 999");
+// im.mask(creditValueInput);
+// Inputmask.extendAliases({
+//   'numeric': {
+//     autoUnmask: true,
+//   }
+// });
+ Inputmask({"mask": "# ##9", removeMaskOnSubmit:true}).mask(creditValueInput);
+// Inputmask("9-a{1,3}9{1,3}").mask(creditValueInput);
+// Inputmask("9", { repeat: 10 }).mask(creditValueInput);
+
 // первоначальный взнос
 var firstPaymentSlider = document.querySelector('#credit__first-payment-slider-input');
 var firstPaymentInput = document.querySelector('#credit__first-payment-input');
