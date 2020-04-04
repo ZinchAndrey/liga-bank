@@ -79,9 +79,26 @@ var creditSum; // сумма кредита
 //     autoUnmask: true,
 //   }
 // });
- Inputmask({"mask": "# ##9", removeMaskOnSubmit:true}).mask(creditValueInput);
+// Inputmask({"mask": "# ##9", removeMaskOnSubmit:true}).mask(creditValueInput);
 // Inputmask("9-a{1,3}9{1,3}").mask(creditValueInput);
 // Inputmask("9", { repeat: 10 }).mask(creditValueInput);
+
+/* eslint-disable */
+jQuery(document).ready(function () {
+
+  // $('.date').mask('00/00/0000');
+  // $('.phone').mask('+0 (000) 000 00 00', { placeholder: "+_ (___) ___ __ __" });
+  $(creditValueInput).mask('000 000 000 000 000 руб', { reverse: true });
+
+  function unmask(element) {
+    $(element).cleanVal();
+  }
+
+});
+/* eslint-enable */
+function unmask(element) {
+  $(element).cleanVal();
+}
 
 // первоначальный взнос
 var firstPaymentSlider = document.querySelector('#credit__first-payment-slider-input');
