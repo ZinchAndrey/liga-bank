@@ -90,15 +90,17 @@ jQuery(document).ready(function () {
   // $('.phone').mask('+0 (000) 000 00 00', { placeholder: "+_ (___) ___ __ __" });
   $(creditValueInput).mask('000 000 000 000 000 руб', { reverse: true });
 
-  function unmask(element) {
-    $(element).cleanVal();
-  }
-
 });
-/* eslint-enable */
-function unmask(element) {
-  $(element).cleanVal();
+
+
+function moneyMask(element) {
+  return $(element).mask('000 000 000 000 000 руб', { reverse: true });
 }
+
+function unmask(element) {
+  return $(element).cleanVal();
+}
+/* eslint-enable */
 
 // первоначальный взнос
 var firstPaymentSlider = document.querySelector('#credit__first-payment-slider-input');
@@ -307,8 +309,9 @@ creditForm.addEventListener('input', reCalculate);
 // увеличение и уменьшение суммы кредита по клику
 creditPlusButton.addEventListener('click', function (evt) {
   evt.preventDefault();
-  creditValueInput.value = Number(creditValueInput.value) + creditStep;
+  creditValueInput.value = Number(unmask(creditValueInput)) + creditStep;
   reCalculate();
+  moneyMask(creditValueInput);
 });
 
 creditMinusButton.addEventListener('click', function (evt) {
