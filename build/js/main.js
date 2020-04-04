@@ -71,37 +71,6 @@ var creditMinusButton = document.querySelector('.credit__value-button--minus');
 var creditValueInput = document.querySelector('#credit__value');
 var creditSum; // сумма кредита
 
-
-// var im = new Inputmask("999 999 999");
-// im.mask(creditValueInput);
-// Inputmask.extendAliases({
-//   'numeric': {
-//     autoUnmask: true,
-//   }
-// });
-// Inputmask({"mask": "# ##9", removeMaskOnSubmit:true}).mask(creditValueInput);
-// Inputmask("9-a{1,3}9{1,3}").mask(creditValueInput);
-// Inputmask("9", { repeat: 10 }).mask(creditValueInput);
-
-/* eslint-disable */
-jQuery(document).ready(function () {
-
-  // $('.date').mask('00/00/0000');
-  // $('.phone').mask('+0 (000) 000 00 00', { placeholder: "+_ (___) ___ __ __" });
-  $(creditValueInput).mask('000 000 000 000 000 руб', { reverse: true });
-
-});
-
-
-function moneyMask(element) {
-  return $(element).mask('000 000 000 000 000 руб', { reverse: true });
-}
-
-function unmask(element) {
-  return $(element).cleanVal();
-}
-/* eslint-enable */
-
 // первоначальный взнос
 var firstPaymentSlider = document.querySelector('#credit__first-payment-slider-input');
 var firstPaymentInput = document.querySelector('#credit__first-payment-input');
@@ -132,6 +101,26 @@ var percentRate; // начальное значение процентной с�
 var percentRateMonth; // процентная ставка в месяц
 var monthPayment; // ежемесячный платеж
 var requiredProfit; // требуемый доход
+
+// подключение масок на input
+/* eslint-disable */
+jQuery(document).ready(function () {
+
+  $(creditValueInput).mask('000 000 000 000 000 рублей', { reverse: true });
+  $(firstPaymentInput).mask('000 000 000 000 000 рублей', { reverse: true });
+
+});
+
+
+function moneyMask(element) {
+  $(element).unmask(); // внутренний метод плагина
+  $(element).mask('000 000 000 000 000 рублей', { reverse: true });
+}
+
+function unmask(element) {
+  return $(element).cleanVal();
+}
+/* eslint-enable */
 
 // открывает и закрывает список кастомного select
 function onCustomSelect() {
@@ -253,6 +242,9 @@ function reCalculate() {
 
   requiredProfit = Math.trunc(monthPayment / REQUIRED_PROFIT_RATIO);
   showOffer(offerRequiredProfit, requiredProfit, ' рублей');
+
+  // наложение масок
+  moneyMask(firstPaymentInput);
 }
 
 // меняет подписи в зависимости от типа кредита
@@ -316,8 +308,9 @@ creditPlusButton.addEventListener('click', function (evt) {
 
 creditMinusButton.addEventListener('click', function (evt) {
   evt.preventDefault();
-  creditValueInput.value = Number(creditValueInput.value) - creditStep;
+  creditValueInput.value = Number(unmask(creditValueInput)) - creditStep;
   reCalculate();
+  moneyMask(creditValueInput);
 });
 
 firstPaymentSlider.addEventListener('input', function () {
