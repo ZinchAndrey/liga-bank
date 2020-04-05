@@ -147,14 +147,20 @@ function onCustomSelect() {
   });
 }
 
-// закрывает список кастомного select при расфокусе
+
+// закрывает список кастомного select при расфокусе, задержка по времени нужна, чтобы одновременно не срабатывал blur и click на activeSelect
 function onBlurSelect() {
   selectList.addEventListener('blur', function () {
-    if (selectList.classList.contains('credit__select-list--closed') === false) {
-      selectList.classList.add('credit__select-list--closed');
-      changeSelectClass();
-    }
+    setTimeout(closeSelect, 10);
   });
+}
+
+// закрывает выпадалющий список
+function closeSelect() {
+  if (selectList.classList.contains('credit__select-list--closed') === false) {
+    selectList.classList.add('credit__select-list--closed');
+    changeSelectClass();
+  }
 }
 
 // меняет класс выбранного селекта <p> для корректного отображения рамок
@@ -333,13 +339,6 @@ creditMinusButton.addEventListener('click', function (evt) {
   reCalculate();
   moneyMask(creditValueInput);
 });
-
-// этот блок бессмысленен, так как обработчик висит на форме
-// firstPaymentSlider.addEventListener('input', function () {
-//   getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
-//   unmask(creditValueInput);
-//   firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
-// });
 
 requestButton.addEventListener('click', function (evt) {
   evt.preventDefault();
