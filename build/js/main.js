@@ -108,6 +108,7 @@ jQuery(document).ready(function () {
 
   $(creditValueInput).mask('000 000 000 000 000 рублей', { reverse: true });
   $(firstPaymentInput).mask('000 000 000 000 000 рублей', { reverse: true });
+  $(creditTimeInput).mask('000 лет', { reverse: true });
 
 });
 
@@ -201,9 +202,7 @@ function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
 // изменение срока кредита
 function onInputCreditTime() {
   creditTimeSlider.addEventListener('input', function () {
-    // unmasking(creditTimeInput);
     getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
-    // yearMask(creditTimeInput);
   });
 }
 
@@ -265,6 +264,7 @@ function reCalculate() {
   moneyMask(offerCreditValue);
   moneyMask(offerMonthPayment);
   moneyMask(offerRequiredProfit);
+  yearMask(creditTimeInput);
 
 }
 
@@ -304,9 +304,9 @@ function changeFinalForm() {
   requestNumber = localStorage.getItem('requestNumber');
 
   finalFormCreditType.textContent = CreditSettings[goal.value].CREDIT_GOAL_RU;
-  finalFormCreditValue.textContent = creditValueInput.value + ' рублей';
-  finalFormFirstPayment.textContent = firstPaymentInput.value + ' рублей';
-  finalFormCreditTime.textContent = creditTimeInput.value + ' лет';
+  finalFormCreditValue.textContent = creditValueInput.value;
+  finalFormFirstPayment.textContent = firstPaymentInput.value;
+  finalFormCreditTime.textContent = creditTimeInput.value;
   finalFormCreditLabel.textContent = CreditSettings[goal.value].CREDIT_LABEL;
   finalFormRequestNumber.textContent = '№ ' + requestNumberText.slice(-4);
 
