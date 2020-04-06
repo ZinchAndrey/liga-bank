@@ -147,7 +147,6 @@ function onCustomSelect() {
   });
 }
 
-
 // закрывает список кастомного select при расфокусе, задержка по времени нужна, чтобы одновременно не срабатывал blur и click на activeSelect
 function onBlurSelect() {
   selectList.addEventListener('blur', function () {
@@ -206,9 +205,26 @@ function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
 }
 
 // изменение срока кредита
-function onInputCreditTime() {
+function onCreditTimeSlider() {
   creditTimeSlider.addEventListener('input', function () {
     getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+  });
+}
+
+// функция по изменению input с количеством лет и переносу значений в ползунок
+function onCreditTimeInput() {
+  creditTimeInput.addEventListener('change', function () {
+    creditTimeSlider.value = getUnmaskValue(creditTimeInput);
+
+    if (getUnmaskValue(creditTimeInput) < CreditSettings[goal.value].CREDIT_TIME_MIN) {
+      creditTimeInput.value = CreditSettings[goal.value].CREDIT_TIME_MIN;
+    } else if (getUnmaskValue(creditTimeInput) > CreditSettings[goal.value].CREDIT_TIME_MAX) {
+      creditTimeInput.value = CreditSettings[goal.value].CREDIT_TIME_MAX;
+    }
+
+    yearMask(creditTimeInput);
+    creditTimeText.textContent = creditTimeInput.value;
+    reCalculate();
   });
 }
 
@@ -239,10 +255,9 @@ function reCalculate() {
   unmasking(creditValueInput);
 
   // пересчет значений в слайдере
-  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+  // getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
   getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
   firstPaymentInput.value = Number(creditValueInput.value) * firstPaymentSlider.value * PERCENT_COEF;
-
 
   if (motherCapital.checked) {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
@@ -271,7 +286,6 @@ function reCalculate() {
   moneyMask(offerMonthPayment);
   moneyMask(offerRequiredProfit);
   yearMask(creditTimeInput);
-
 }
 
 // меняет подписи в зависимости от типа кредита
@@ -356,6 +370,7 @@ finalForm.addEventListener('submit', function () {
 onCustomSelect();
 makeActiveItem();
 onInputFirstPayment();
-onInputCreditTime();
+onCreditTimeSlider();
+onCreditTimeInput();
 
 
