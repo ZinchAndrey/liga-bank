@@ -183,6 +183,8 @@ function onSelectItemChange() {
   // возвращает первоначальный взнос в минимальное значение
   firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
   firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+  // пересчет количества лет, точнее надписей
+  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
   reCalculate();
 
   if (goal.value === CreditSettings.consumer.CREDIT_GOAL) {
