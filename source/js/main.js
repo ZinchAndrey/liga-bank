@@ -19,6 +19,8 @@ var CreditSettings = {
     CREDIT_LABEL: 'Стоимость недвижимости',
     CREDIT_OFFER_LABEL: 'Сумма ипотеки',
     CREDIT_LIMITS: 'От 1 200 000 до 25 000 000 рублей',
+    CREDIT_VALUE_MIN: 1200000,
+    CREDIT_VALUE_MAX: 25000000,
     CREDIT_TIME_MIN: 5,
     CREDIT_TIME_MAX: 30,
     CREDIT_PERCENT_MIN: 10,
@@ -31,6 +33,8 @@ var CreditSettings = {
     CREDIT_LABEL: 'Стоимость автомобиля',
     CREDIT_OFFER_LABEL: 'Сумма автокредита',
     CREDIT_LIMITS: 'От 500 000 рублей до 5 000 000 рублей',
+    CREDIT_VALUE_MIN: 500000,
+    CREDIT_VALUE_MAX: 5000000,
     CREDIT_TIME_MIN: 1,
     CREDIT_TIME_MAX: 5,
     CREDIT_PERCENT_MIN: 20,
@@ -43,6 +47,8 @@ var CreditSettings = {
     CREDIT_LABEL: 'Сумма потребительского кредита',
     CREDIT_OFFER_LABEL: 'Сумма кредита',
     CREDIT_LIMITS: 'От 50 000 рублей до 3 000 000 рублей',
+    CREDIT_VALUE_MIN: 50000,
+    CREDIT_VALUE_MAX: 3000000,
     CREDIT_TIME_MIN: 1,
     CREDIT_TIME_MAX: 7,
     CREDIT_PERCENT_MIN: 0,
@@ -174,6 +180,9 @@ function changeSelectClass() {
 // делает пересчет значений при выборе типа кредита
 function onSelectItemChange() {
   changeLabels(goal.value); // evt.currentTarget = goal.value
+  // возвращает первоначальный взнос в минимальное значение
+  firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+  firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
   reCalculate();
 
   if (goal.value === CreditSettings.consumer.CREDIT_GOAL) {
@@ -228,11 +237,23 @@ function onCreditTimeInput() {
   });
 }
 
-// изменение первоначального взноса
-function onInputFirstPayment() {
+function onFirstPaymentSlider() {
   firstPaymentSlider.addEventListener('input', function () {
+    unmasking(creditValueInput);
     getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
     firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+  });
+}
+
+function onFirstPaymentInput() {
+  firstPaymentInput.addEventListener('change', function () {
+    unmasking(creditValueInput);
+    unmasking(firstPaymentInput);
+    firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+    firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+
+    moneyMask(creditValueInput);
+    moneyMask(firstPaymentInput);
   });
 }
 
@@ -253,11 +274,15 @@ function reCalculate() {
 
   // делаем unmask всех элементов, которые используются в расчетах, в конце снова наложим маску на них
   unmasking(creditValueInput);
+  unmasking(firstPaymentInput);
 
-  // пересчет значений в слайдере
-  // getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+  // можно обернуть это в функции и использовать в обработчиках событий
+  firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+  firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+
   getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
-  firstPaymentInput.value = Number(creditValueInput.value) * firstPaymentSlider.value * PERCENT_COEF;
+  firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+  // досюда
 
   if (motherCapital.checked) {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
@@ -369,7 +394,8 @@ finalForm.addEventListener('submit', function () {
 
 onCustomSelect();
 makeActiveItem();
-onInputFirstPayment();
+onFirstPaymentInput();
+onFirstPaymentSlider();
 onCreditTimeSlider();
 onCreditTimeInput();
 
