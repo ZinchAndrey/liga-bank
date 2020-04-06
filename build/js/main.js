@@ -25,6 +25,8 @@ var CreditSettings = {
     CREDIT_TIME_MAX: 30,
     CREDIT_PERCENT_MIN: 10,
     CREDIT_PERCENT_MAX: 100,
+    CREDIT_SUM_MIN: 500000,
+    CREDIT_ERROR_TEXT: 'Наш банк не выдает ипотечные кредиты меньше 500 000 рублей',
   },
   autocredit: {
     CREDIT_GOAL: 'autocredit',
@@ -39,6 +41,8 @@ var CreditSettings = {
     CREDIT_TIME_MAX: 5,
     CREDIT_PERCENT_MIN: 20,
     CREDIT_PERCENT_MAX: 100,
+    CREDIT_SUM_MIN: 200000,
+    CREDIT_ERROR_TEXT: 'Наш банк не выдает автокредиты меньше 200 000 рублей',
   },
   consumer: {
     CREDIT_GOAL: 'consumer',
@@ -53,6 +57,8 @@ var CreditSettings = {
     CREDIT_TIME_MAX: 7,
     CREDIT_PERCENT_MIN: 0,
     CREDIT_PERCENT_MAX: 0,
+    CREDIT_SUM_MIN: 0,
+    CREDIT_ERROR_TEXT: 'Наш банк не выдает ипотечные кредиты меньше 500 000 рублей',
   },
 };
 
@@ -65,17 +71,15 @@ var creditStep = CreditSettings.hypothec.CREDIT_STEP;
 var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
 
 // кастомный select
-// var selectBlock = document.querySelector('.credit__select-block');
 var activeSelect = document.querySelector('.credit__select-active');
 var selectList = document.querySelector('.credit__select-list');
-// var selectItems = document.querySelectorAll('.credit__select-item');
 
 // размер кредита
 var creditForm = document.querySelector('#credit-form');
 var creditPlusButton = document.querySelector('.credit__value-button--plus');
 var creditMinusButton = document.querySelector('.credit__value-button--minus');
 var creditValueInput = document.querySelector('#credit__value');
-var creditSum; // сумма кредита
+var creditSum = 0; // сумма кредита
 
 // первоначальный взнос
 var firstPaymentSlider = document.querySelector('#credit__first-payment-slider-input');
@@ -93,6 +97,11 @@ var offerMonthPayment = document.querySelector('#month-payment');
 var offerRequiredProfit = document.querySelector('#required-profit');
 var offerCreditValue = document.querySelector('#offer-credit-value');
 var requestButton = document.querySelector('.credit__offer-button');
+var creditOfferBlock = document.querySelector('.credit__offer');
+
+// окно ошибки
+var errorBlock = document.querySelector('.credit__error');
+var errorHeader = document.querySelector('.credit__error-header');
 
 // финальная форма - шаг 3
 var finalForm = document.querySelector('.final-form');
@@ -292,6 +301,16 @@ function reCalculate() {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
   }
 
+  // обернуть в функцию
+  if (creditSum < CreditSettings[goal.value].CREDIT_SUM_MIN) {
+    errorHeader.textContent = CreditSettings[goal.value].CREDIT_ERROR_TEXT;
+    errorBlock.classList.remove('closed');
+    creditOfferBlock.classList.add('closed');
+  } else {
+    errorBlock.classList.add('closed');
+    creditOfferBlock.classList.remove('closed');
+  }
+
   var years = creditTimeSlider.value;
   var months = years * MONTHS_PER_YEAR;
 
@@ -393,6 +412,22 @@ finalForm.addEventListener('submit', function () {
   localStorage.setItem = ('phone', finalFormPhone.value);
   localStorage.setItem = ('email', finalFormEmail.value);
 });
+
+// creditOfferBlock.addEventListener('change', function () {
+//   if (creditSum < 1200000) {
+//     console.log('test');
+//     // errorBlock.classList.remove('closed');
+//   }
+// });
+
+// creditValueInput.addEventListener('input', function () {
+//   if (getUnmaskValue(creditValueInput) < 1200000) {
+//     creditValueInput.validity.valid = false;
+//     creditValueInput.setCustomValidity('Введите значение из диапазона');
+//     console.log('test');
+
+//   }
+// });
 
 onCustomSelect();
 makeActiveItem();

@@ -300,3 +300,24 @@ select {
     margin: 0 auto;
   }
 }
+
+.closed {
+  display: none;
+}
+
+.credit__error {
+  width: 500px;
+  padding: 60px;
+  background-color: $grey;
+  align-self: flex-start;
+
+  h3 {
+    span {
+      color: inherit;
+    }
+  }
+
+  p {
+    padding-right: 50px;
+  }
+}
