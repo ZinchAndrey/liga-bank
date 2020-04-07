@@ -76,6 +76,7 @@ var CreditSettings = {
 
 // цель кредита
 var goal = document.querySelector('#goal');
+var creditParameters = document.querySelector('.credit__parameters');
 var creditLabel = document.querySelector('#credit-label');
 var creditLimitsLabel = document.querySelector('#credit-limits-label');
 var creditOfferLabel = document.querySelector('.credit__offer-label');
@@ -258,10 +259,9 @@ function makeActiveItem() {
     goal.value = evt.target.dataset.value;
 
     onSelectItemChange();
+    creditOfferBlock.classList.remove('closed');
+    creditParameters.classList.remove('closed');
   });
-  // selectBlock.addEventListener('blur', function () {
-  //   alert('test');
-  // });
 }
 
 // переводит значение ползунка в связанный input
@@ -476,6 +476,41 @@ function showErrorCreditValue() {
   }
 }
 
+// popup
+function popupHandler() {
+  var popup = document.querySelector('.popup');
+  var buttonClosePopup = document.querySelector('.popup__close-button');
+
+  function closePopup() {
+    popup.classList.add('popup--closed');
+    document.body.classList.remove('body__container--popup-opened');
+  }
+
+  popup.addEventListener('click', function (evt) {
+    if (evt.target === evt.currentTarget) {
+      closePopup();
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 27) {
+      if (!popup.classList.contains('popup--closed')) {
+        closePopup();
+      }
+    }
+  });
+
+  buttonClosePopup.addEventListener('click', function () {
+    closePopup();
+  });
+
+  finalForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    popup.classList.remove('popup--closed');
+    document.body.classList.add('body__container--popup-opened');
+  });
+}
+
 creditForm.addEventListener('input', reCalculate);
 
 // увеличение и уменьшение суммы кредита по клику
@@ -512,3 +547,5 @@ onFirstPaymentInput();
 onFirstPaymentSlider();
 onCreditTimeSlider();
 onCreditTimeInput();
+popupHandler();
+

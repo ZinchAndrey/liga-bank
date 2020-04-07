@@ -16,7 +16,7 @@
     <header class="page-header">
       <div class="page-header__container  container--header">
         <a href="#" class="page-header__logo">
-          <img src="img/logo@2x.svg" alt="Логотип" width="155" height="auto" />
+          <img src="img/logo@2x.svg" alt="Логотип" width="155"/>
         </a>
         <ul class="page-header__nav nav">
           <li class="nav__item"><a href="#">Услуги</a></li>
@@ -38,7 +38,7 @@
             <div class="credit__form-wrapper">
               <fieldset class="credit__goal">
                 <h3>Шаг 1. Цель кредита</h3>
-                <select class="visually-hidden" name="goal" id="goal" aria-placeholder="Выберите цель кредита">
+                <select class="visually-hidden credit__hidden-select" name="goal" id="goal" aria-label="Выберите цель кредита">
                   <option value="hypothec">Ипотечное кредитование</option>
                   <option value="autocredit">Автомобильное кредитование</option>
                   <option value="consumer">Потребительский кредит</option>
@@ -52,7 +52,7 @@
                   </ul>
                 </div>
               </fieldset>
-              <fieldset class="credit__parameters">
+              <fieldset class="credit__parameters closed">
                 <h3>Шаг 2. Введите параметры кредита</h3>
                 <label for="credit__value" id="credit-label">Стоимость недвижимости</label>
                 <div class="credit__value-block">
@@ -65,16 +65,15 @@
                   <span id="credit-limits-label">От 1 200 000 до 25 000 000 рублей</span>
                 </div>
                 <div class="credit__first-payment-block">
-                  <label for="credit__first-payment">Первоначальный взнос</label>
+                  <label for="credit__first-payment-input">Первоначальный взнос</label>
                   <input type="text" id="credit__first-payment-input" placeholder="200 000 рублей" value="200000">
                   <div class="credit__first-payment-slider">
-                    <!-- <input id ="credit__first-payment-slider-input" type="range" min="10" max="100" step="5" value="10"> -->
                     <input id ="credit__first-payment-slider-input" type="range" min="10" max="100" step="5" value="10">
                     <span class="credit__first-payment-percent" id="credit__first-payment-percent">10%</span>
                   </div>
                   </div>
                 <div class="credit__time-block">
-                  <label for="credit__time">Срок кредитования</label>
+                  <label for="credit__time-input">Срок кредитования</label>
                   <input type="text" id="credit__time-input" placeholder="5 лет" value="5">
                   <div class="credit__time-slider">
                     <input id ="credit__time-slider-input" type="range" min="5" max="30" step="1" value="5">
@@ -99,7 +98,7 @@
                 </div>
               </fieldset>
             </div>
-            <fieldset class="credit__offer">
+            <fieldset class="credit__offer closed">
               <div class="credit__offer-container">
                 <h3>Наше предложение</h3>
                 <ul class="credit__offer-list">
@@ -128,7 +127,7 @@
               <p>Попробуйте использовать другие параметры для расчета</p>
             </div>
           </form>
-          <form class="credit__final-form final-form final-form--closed"action="#" method="post">
+          <form class="credit__final-form final-form final-form--closed" action="#" method="post">
             <h3>Шаг 3. Оформление заявки</h3>
             <ul class="final-form__list">
               <li class="final-form__item">
@@ -159,6 +158,13 @@
               <button class="final-form__button button" type="submit">Отправить</button>
             </div>
           </form>
+        </div>
+      </section>
+      <section class="popup popup--closed" id="popup">
+        <div class="popup__container">
+          <button class="popup__close-button"></button>
+          <h3>Спасибо за обращение в наш банк</h3>
+          <p>Наш менеджер скоро свяжется с вами по указанному номеру телефона.</p>
         </div>
       </section>
     </main>
