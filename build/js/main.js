@@ -268,6 +268,12 @@ function onFirstPaymentInput() {
   });
 }
 
+// при вводе первого платежа высчитывает процент и двигает ползунок
+function getInputToSliderPayment() {
+  firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+  firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+}
+
 // добавляет в разметку значения по кредиту
 function showOffer(element, value, dimension) {
   element.textContent = value + dimension;
@@ -287,13 +293,10 @@ function reCalculate() {
   unmasking(creditValueInput);
   unmasking(firstPaymentInput);
 
-  // можно обернуть это в функции и использовать в обработчиках событий
-  firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
-  firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+  getInputToSliderPayment();
 
   getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
   firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
-  // досюда
 
   if (motherCapital.checked) {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
@@ -301,19 +304,10 @@ function reCalculate() {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
   }
 
-  // обернуть в функцию
-  if (creditSum < CreditSettings[goal.value].CREDIT_SUM_MIN) {
-    errorHeader.textContent = CreditSettings[goal.value].CREDIT_ERROR_TEXT;
-    errorBlock.classList.remove('closed');
-    creditOfferBlock.classList.add('closed');
-  } else {
-    errorBlock.classList.add('closed');
-    creditOfferBlock.classList.remove('closed');
-  }
+  showErrorBlock();
 
   var years = creditTimeSlider.value;
   var months = years * MONTHS_PER_YEAR;
-
   // вывод в HTML разметку полученных значений в раздел "Наше предложение"
   showOffer(offerPercentRate, percentRate, '%');
   showOffer(offerCreditValue, creditSum, '');
@@ -383,6 +377,18 @@ function changeFinalForm() {
   }
 }
 
+// при маленькой сумме кредиты показывает сообщение об ошибке
+function showErrorBlock() {
+  if (creditSum < CreditSettings[goal.value].CREDIT_SUM_MIN) {
+    errorHeader.textContent = CreditSettings[goal.value].CREDIT_ERROR_TEXT;
+    errorBlock.classList.remove('closed');
+    creditOfferBlock.classList.add('closed');
+  } else {
+    errorBlock.classList.add('closed');
+    creditOfferBlock.classList.remove('closed');
+  }
+}
+
 creditForm.addEventListener('input', reCalculate);
 
 // увеличение и уменьшение суммы кредита по клику
@@ -412,22 +418,6 @@ finalForm.addEventListener('submit', function () {
   localStorage.setItem = ('phone', finalFormPhone.value);
   localStorage.setItem = ('email', finalFormEmail.value);
 });
-
-// creditOfferBlock.addEventListener('change', function () {
-//   if (creditSum < 1200000) {
-//     console.log('test');
-//     // errorBlock.classList.remove('closed');
-//   }
-// });
-
-// creditValueInput.addEventListener('input', function () {
-//   if (getUnmaskValue(creditValueInput) < 1200000) {
-//     creditValueInput.validity.valid = false;
-//     creditValueInput.setCustomValidity('Введите значение из диапазона');
-//     console.log('test');
-
-//   }
-// });
 
 onCustomSelect();
 makeActiveItem();
