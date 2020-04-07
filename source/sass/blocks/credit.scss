@@ -33,6 +33,17 @@
   span {
     color: $grey-text;
   }
+
+  .credit__error-text {
+    position: absolute;
+    top: -35px;
+    right: 0;
+    color: red;
+
+    &--closed {
+      display: none;
+    }
+  }
 }
 
 // .credit__container {
@@ -320,4 +331,8 @@ select {
   p {
     padding-right: 50px;
   }
+}
+
+.credit__value-error {
+  border: 1px solid red;
 }

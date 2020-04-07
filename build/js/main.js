@@ -80,6 +80,7 @@ var creditPlusButton = document.querySelector('.credit__value-button--plus');
 var creditMinusButton = document.querySelector('.credit__value-button--minus');
 var creditValueInput = document.querySelector('#credit__value');
 var creditSum = 0; // сумма кредита
+var creditErrorText = document.querySelector('.credit__error-text');
 
 // первоначальный взнос
 var firstPaymentSlider = document.querySelector('#credit__first-payment-slider-input');
@@ -304,6 +305,7 @@ function reCalculate() {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
   }
 
+  showErrorCreditValue();
   showErrorBlock();
 
   var years = creditTimeSlider.value;
@@ -386,6 +388,16 @@ function showErrorBlock() {
   } else {
     errorBlock.classList.add('closed');
     creditOfferBlock.classList.remove('closed');
+  }
+}
+// при значении кредита вне допустимых пределов выдается ошибка
+function showErrorCreditValue() {
+  if (creditValueInput.value < CreditSettings[goal.value].CREDIT_VALUE_MIN || creditValueInput.value > CreditSettings[goal.value].CREDIT_VALUE_MAX) {
+    creditValueInput.classList.add('credit__value-error');
+    creditErrorText.classList.remove('credit__error-text--closed');
+  } else {
+    creditValueInput.classList.remove('credit__value-error');
+    creditErrorText.classList.add('credit__error-text--closed');
   }
 }
 
