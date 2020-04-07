@@ -81,7 +81,7 @@ var creditLabel = document.querySelector('#credit-label');
 var creditLimitsLabel = document.querySelector('#credit-limits-label');
 var creditOfferLabel = document.querySelector('.credit__offer-label');
 var creditStep = CreditSettings.hypothec.CREDIT_STEP;
-var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
+
 
 // кастомный select
 var activeSelect = document.querySelector('.credit__select-active');
@@ -96,6 +96,7 @@ var creditSum = 0; // сумма кредита
 var creditErrorText = document.querySelector('.credit__error-text');
 
 // первоначальный взнос
+var firstPaymentBlock = document.querySelector('.credit__first-payment-block');
 var firstPaymentSlider = document.querySelector('#credit__first-payment-slider-input');
 var firstPaymentInput = document.querySelector('#credit__first-payment-input');
 var firstPaymentPercent = document.querySelector('#credit__first-payment-percent');
@@ -209,7 +210,7 @@ function onSelectItemChange() {
   uncheckingCheckboxes();
   // возвращает первоначальный взнос в минимальное значение
   firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
-  firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+  firstPaymentInput.value = getUnmaskValue(creditValueInput) * firstPaymentSlider.value * PERCENT_COEF;
   // пересчет количества лет, точнее надписей
   getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
   reCalculate();
@@ -293,7 +294,7 @@ function onCreditTimeInput() {
     reCalculate();
   });
 }
-
+// изменение первоначального взноса ползунком
 function onFirstPaymentSlider() {
   firstPaymentSlider.addEventListener('input', function () {
     unmasking(creditValueInput);
@@ -325,6 +326,18 @@ function showOffer(element, value, dimension) {
   element.textContent = value + dimension;
 }
 
+function test() {
+  firstPaymentInput.addEventListener('change', function () {
+    unmasking(creditValueInput);
+    unmasking(firstPaymentInput);
+    var firstPay = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+    if (firstPay < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
+      firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+      firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+    }
+  });
+}
+test();
 // пересчитывает значения в разделе "Наше предложение"
 function reCalculate() {
 
@@ -332,10 +345,10 @@ function reCalculate() {
   unmasking(creditValueInput);
   unmasking(firstPaymentInput);
 
-  getInputToSliderPayment();
-
-  getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
-  firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+  // getInputToSliderPayment();
+  // добавить эту строку в SelectItemChange - тогда сразу будет считать
+  // getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
+  // firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
 
   if (motherCapital.checked) {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
@@ -344,7 +357,6 @@ function reCalculate() {
   }
 
   // изменение процентной ставки - вынести в функцию
-  // добавить сокрытие чекбоксов в зависимости от типа кредита
   if (goal.value === 'hypothec') {
     if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
       percentRate = PERCENT_MAX;
