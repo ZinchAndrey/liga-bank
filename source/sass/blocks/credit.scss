@@ -15,6 +15,10 @@
     line-height: 140%;
     margin-top: 0;
   }
+
+  input:focus {
+    outline: none;
+  }
 }
 
 .credit__form-wrapper {
@@ -225,12 +229,13 @@ select {
   }
 }
 
-.credit__mother-capital-block {
+.credit__checkbox {
   display: flex;
   // align-items: bo;
 
   label {
     margin: 0;
+    padding: 5px 0;
     cursor: pointer;
 
     @include hover-effect;

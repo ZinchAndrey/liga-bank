@@ -5,6 +5,18 @@ var PERCENT_MAX = 9.4;
 var PERCENT_MIN = 8.5;
 var PERCENT_CHANGE_LIMIT = 15; // значение, после которого меняется процентная ставка
 var PERCENT_COEF = 0.01;
+// при рефакторинге объектом сделать
+var PERCENT_AUTO_HIGH = 16;
+var PERCENT_AUTO_MIDDLE = 15;
+var PERCENT_AUTO_LOW = 8.5;
+var PERCENT_AUTO_LOWEST = 3.5;
+var AUTOCREDIT_VALUE_LIMIT_PERCENT = 2000000;
+var CONSUMER_VALUE_LIMIT_LOW = 750000;
+var CONSUMER_VALUE_LIMIT_HIGH = 2000000;
+var PERCENT_CONSUMER_HIGH = 15;
+var PERCENT_CONSUMER_MIDDLE = 12.5;
+var PERCENT_CONSUMER_LOW = 9;
+var PERCENT_CONSUMER_DELTA = 0.5;
 
 // остальное
 var MONTHS_PER_YEAR = 12;
@@ -113,6 +125,9 @@ var requestNumber = 1; // начальное значение счетчика �
 
 // остальное
 var motherCapital = document.querySelector('#credit__mother-capital');
+var casco = document.querySelector('#credit__casco');
+var creditInsurance = document.querySelector('#credit__insurance');
+var salaryClient = document.querySelector('#credit__salary');
 var percentRate; // начальное значение процентной ставки
 var percentRateMonth; // процентная ставка в месяц
 var monthPayment; // ежемесячный платеж
@@ -147,7 +162,6 @@ function getUnmaskValue(element) {
 function unmasking(element) {
   $(element).unmask();
 }
-
 /* eslint-enable */
 
 // открывает и закрывает список кастомного select
@@ -190,19 +204,50 @@ function changeSelectClass() {
 // делает пересчет значений при выборе типа кредита
 function onSelectItemChange() {
   changeLabels(goal.value); // evt.currentTarget = goal.value
+  // сбрасывает все чекбоксы при переклбчении типа кредита
+  uncheckingCheckboxes();
   // возвращает первоначальный взнос в минимальное значение
   firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
   firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
   // пересчет количества лет, точнее надписей
   getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
   reCalculate();
-
+  // закрывате блок первого взноса при потребительском кредите
   if (goal.value === CreditSettings.consumer.CREDIT_GOAL) {
     firstPaymentBlock.classList.add('credit__first-payment-block--closed');
   } else {
     firstPaymentBlock.classList.remove('credit__first-payment-block--closed');
   }
+  hideCheckboxes();
+  showCheckboxes();
   changeSelectClass();
+}
+
+// сбрасывает все чекбоксы
+function uncheckingCheckboxes() {
+  var checkboxes = creditForm.querySelectorAll('input[type="checkbox"]');
+  for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].checked = false;
+  }
+}
+
+// скрывает все чекбоксы
+function hideCheckboxes() {
+  var checkboxBlocks = creditForm.querySelectorAll('.credit__checkbox');
+  for (var i = 0; i < checkboxBlocks.length; i++) {
+    checkboxBlocks[i].classList.add('closed');
+  }
+}
+// показывает чекбоксы в зависимости от типа кредита
+function showCheckboxes() {
+  if (goal.value === CreditSettings.hypothec.CREDIT_GOAL) {
+    document.querySelector('.credit__checkbox--mother-capital').classList.remove('closed');
+  } else if (goal.value === CreditSettings.autocredit.CREDIT_GOAL) {
+    document.querySelector('.credit__checkbox--casco').classList.remove('closed');
+    document.querySelector('.credit__checkbox--insurance').classList.remove('closed');
+  } else if (goal.value === CreditSettings.consumer.CREDIT_GOAL) {
+    document.querySelector('.credit__checkbox--salary').classList.remove('closed');
+  }
 }
 
 // переключает кастомный и настоящий select
@@ -283,13 +328,6 @@ function showOffer(element, value, dimension) {
 // пересчитывает значения в разделе "Наше предложение"
 function reCalculate() {
 
-  // изменение процентной ставки
-  if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
-    percentRate = PERCENT_MAX;
-  } else {
-    percentRate = PERCENT_MIN;
-  }
-
   // делаем unmask всех элементов, которые используются в расчетах, в конце снова наложим маску на них
   unmasking(creditValueInput);
   unmasking(firstPaymentInput);
@@ -303,6 +341,43 @@ function reCalculate() {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
   } else {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
+  }
+
+  // изменение процентной ставки - вынести в функцию
+  // добавить сокрытие чекбоксов в зависимости от типа кредита
+  if (goal.value === 'hypothec') {
+    if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
+      percentRate = PERCENT_MAX;
+    } else {
+      percentRate = PERCENT_MIN;
+    }
+  }
+
+  if (goal.value === 'autocredit') {
+    percentRate = PERCENT_AUTO_HIGH;
+    if (creditValueInput.value >= AUTOCREDIT_VALUE_LIMIT_PERCENT) {
+      percentRate = PERCENT_AUTO_MIDDLE;
+    }
+
+    if (casco.checked && creditInsurance.checked) {
+      percentRate = PERCENT_AUTO_LOWEST;
+    } else if (casco.checked || creditInsurance.checked) {
+      percentRate = PERCENT_AUTO_LOW;
+    }
+  }
+
+  if (goal.value === 'consumer') {
+    if (creditValueInput.value < CONSUMER_VALUE_LIMIT_LOW) {
+      percentRate = PERCENT_CONSUMER_HIGH;
+    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_LOW && creditValueInput.value < CONSUMER_VALUE_LIMIT_HIGH) {
+      percentRate = PERCENT_CONSUMER_MIDDLE;
+    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_HIGH) {
+      percentRate = PERCENT_CONSUMER_LOW;
+    }
+
+    if (salaryClient.checked === true) {
+      percentRate = percentRate - PERCENT_CONSUMER_DELTA;
+    }
   }
 
   showErrorCreditValue();
@@ -437,5 +512,3 @@ onFirstPaymentInput();
 onFirstPaymentSlider();
 onCreditTimeSlider();
 onCreditTimeInput();
-
-
