@@ -54,11 +54,6 @@
   }
 }
 
-// .credit__container {
-//   // border: 1px solid black; //временно
-//   // min-height: 500px; //временно
-// }
-
 .credit__goal,
 .credit__parameters {
   padding: 0;
@@ -155,6 +150,10 @@ select {
   background-color: $white;
   width: 100%;
 
+  &:focus {
+    outline: none;
+  }
+
   &--closed {
     display: none;
   }
@@ -183,6 +182,10 @@ select {
   border: none;
   background: no-repeat center;
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 
   @include hover-effect;
 
