@@ -437,7 +437,7 @@ function changeFinalForm() {
   var requestNumberText = '0000' + Number(requestNumber);
 
   // local storage
-  requestNumber = localStorage.getItem('requestNumber');
+  requestNumber = Number(requestNumber) + 1;
   localStorage.setItem = ('requestNumber', Number(requestNumber) + 1);
 
   finalFormCreditType.textContent = CreditSettings[goal.value].CREDIT_GOAL_RU;
