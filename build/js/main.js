@@ -182,7 +182,7 @@ function onCustomSelect() {
 // закрывает список кастомного select при расфокусе, задержка по времени нужна, чтобы одновременно не срабатывал blur и click на activeSelect
 function onBlurSelect() {
   selectList.addEventListener('blur', function () {
-    setTimeout(closeSelect, 10);
+    setTimeout(closeSelect, 100);
   });
 }
 
