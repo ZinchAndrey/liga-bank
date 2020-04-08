@@ -1,1 +1,3 @@
-source/js/vendor.js
+source/js/jquery-3.4.1.min.js
+source/js/jquery.mask.js
+source/js/inputmask.min.js

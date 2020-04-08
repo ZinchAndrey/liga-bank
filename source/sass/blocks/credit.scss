@@ -15,6 +15,18 @@
     line-height: 140%;
     margin-top: 0;
   }
+
+  input:focus {
+    outline: none;
+  }
+}
+
+.credit__hidden-select {
+  display: none;
+}
+
+.credit__form-wrapper {
+  margin-right: 30px;
 }
 
 .credit__form {
@@ -22,15 +34,25 @@
   justify-content: space-between;
   margin-bottom: 70px;
 
+  @media (max-width: 1023px) {
+    flex-wrap: wrap;
+  }
+
   span {
     color: $grey-text;
   }
-}
 
-// .credit__container {
-//   // border: 1px solid black; //временно
-//   // min-height: 500px; //временно
-// }
+  .credit__error-text {
+    position: absolute;
+    top: -35px;
+    right: 0;
+    color: red;
+
+    &--closed {
+      display: none;
+    }
+  }
+}
 
 .credit__goal,
 .credit__parameters {
@@ -72,6 +94,76 @@ select {
   margin-bottom: 40px;
 }
 
+// отсечка
+.credit__select-block {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 140%;
+  // border: 1px solid $black-text;
+  //border-radius: 4px;
+  background-color: inherit;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.credit__select-active,
+.credit__select-item {
+  margin: 0;
+  padding: 15px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $blue;
+    color: $white;
+  }
+}
+
+.credit__select-active {
+  border-radius: 4px 4px 0 0;
+  border: 1px solid $black-text;
+  border-bottom: none;
+  background: url("../img/arrow-open-icon.svg") no-repeat right 24px center;
+
+  &--closed {
+    border-bottom: 1px solid $black-text;
+    border-radius: 4px;
+    background-image: url("../img/arrow-closed-icon.svg");
+  }
+}
+
+.credit__select-item {
+  border-bottom: 1px solid $grey-slider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.credit__select-list {
+  font-weight: normal;
+  border: 1px solid $black-text;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+
+  position: absolute;
+  background-color: $white;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+
+  &--closed {
+    display: none;
+  }
+
+  // временно
+  // &:focus {
+  //   background-color: blue;
+  // }
+}
+
 .credit__value-block {
   margin-bottom: 30px;
 }
@@ -90,6 +182,10 @@ select {
   border: none;
   background: no-repeat center;
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 
   @include hover-effect;
 
@@ -140,12 +236,13 @@ select {
   }
 }
 
-.credit__mother-capital-block {
+.credit__checkbox {
   display: flex;
   // align-items: bo;
 
   label {
     margin: 0;
+    padding: 5px 0;
     cursor: pointer;
 
     @include hover-effect;
@@ -179,10 +276,20 @@ select {
   align-self: flex-start;
 }
 
+// .credit__offer-container {
+//   min-width: 340px;
+// }
+
 .credit__offer-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.credit__offer-item {
+  @media (max-width: 1150px) {
+    width: 100%;
+  }
 }
 
 .credit__offer-value {
@@ -203,4 +310,41 @@ select {
 
 .credit__offer-button {
   width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .credit {
+    h2 {
+      text-align: center;
+    }
+  }
+
+  .credit__form-wrapper {
+    margin: 0 auto;
+  }
+}
+
+.closed {
+  display: none;
+}
+
+.credit__error {
+  width: 500px;
+  padding: 60px;
+  background-color: $grey;
+  align-self: flex-start;
+
+  h3 {
+    span {
+      color: inherit;
+    }
+  }
+
+  p {
+    padding-right: 50px;
+  }
+}
+
+.credit__value-error {
+  border: 1px solid red;
 }
