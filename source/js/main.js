@@ -15,7 +15,7 @@ var CONSUMER_VALUE_LIMIT_LOW = 750000;
 var CONSUMER_VALUE_LIMIT_HIGH = 2000000;
 var PERCENT_CONSUMER_HIGH = 15;
 var PERCENT_CONSUMER_MIDDLE = 12.5;
-var PERCENT_CONSUMER_LOW = 9;
+var PERCENT_CONSUMER_LOW = 9.5;
 var PERCENT_CONSUMER_DELTA = 0.5;
 
 // остальное
@@ -124,6 +124,11 @@ var finalFormUsername = document.querySelector('[name=username]');
 var finalFormPhone = document.querySelector('[name=phone]');
 var finalFormEmail = document.querySelector('[name=mail]');
 var requestNumber = 1; // начальное значение счетчика заявок
+var finalFormWrapper = document.querySelector('.final-form__input-wrapper');
+
+// popup
+var popup = document.querySelector('.popup');
+var buttonClosePopup = document.querySelector('.popup__close-button');
 
 // остальное
 var motherCapital = document.querySelector('#credit__mother-capital');
@@ -139,8 +144,8 @@ var requiredProfit; // требуемый доход
 /* eslint-disable */
 jQuery(document).ready(function () {
 
-  $(creditValueInput).mask('000 000 000 000 000 рублей', { reverse: true });
-  $(firstPaymentInput).mask('000 000 000 000 000 рублей', { reverse: true });
+  $(creditValueInput).mask('000 000 000 000 000,00 рублей', { reverse: true });
+  $(firstPaymentInput).mask('000 000 000 000 000,00 рублей', { reverse: true });
   $(creditTimeInput).mask('000 лет', { reverse: true });
 
 });
@@ -148,12 +153,17 @@ jQuery(document).ready(function () {
 // накладывает денежную маску на элемент
 function moneyMask(element) {
   $(element).unmask(); // внутренний метод плагина
-  $(element).mask('000 000 000 000 000 рублей', { reverse: true });
+  $(element).mask('000 000 000 000 000,00 рублей', { reverse: true });
 }
 
 function yearMask(element) {
   $(element).unmask(); // внутренний метод плагина
   $(element).mask('000 лет', { reverse: true });
+}
+
+function phoneMask(element) {
+  $(element).unmask(); // внутренний метод плагина
+  $(element).mask('+7 (000) 000-0000');
 }
 
 // возвращает значение элемента без маски
@@ -489,9 +499,6 @@ function showErrorCreditValue() {
 
 // popup
 function popupHandler() {
-  var popup = document.querySelector('.popup');
-  var buttonClosePopup = document.querySelector('.popup__close-button');
-
   function closePopup() {
     popup.classList.add('popup--closed');
     document.body.classList.remove('body__container--popup-opened');
@@ -515,11 +522,15 @@ function popupHandler() {
     closePopup();
   });
 
-  finalForm.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    popup.classList.remove('popup--closed');
-    document.body.classList.add('body__container--popup-opened');
-  });
+  // finalForm.addEventListener('submit', function (evt) {
+  //   evt.preventDefault();
+  //   popup.classList.remove('popup--closed');
+  //   document.body.classList.add('body__container--popup-opened');
+  // });
+}
+// удаляет класс тряски формы при ошибке
+function deleteError() {
+  finalFormWrapper.classList.remove('final-form__input-wrapper--error');
 }
 
 creditForm.addEventListener('input', reCalculate);
@@ -545,13 +556,23 @@ requestButton.addEventListener('click', function (evt) {
   evt.preventDefault();
   finalForm.classList.remove('final-form--closed');
   changeFinalForm();
+  finalFormUsername.focus();
 });
 
 // добавление в localStorage полей формы
-finalForm.addEventListener('submit', function () {
-  localStorage.setItem = ('username', finalFormUsername.value);
-  localStorage.setItem = ('phone', finalFormPhone.value);
-  localStorage.setItem = ('email', finalFormEmail.value);
+finalForm.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+
+  if (!finalFormUsername.value || !finalFormPhone.value || !finalFormEmail.value) {
+    finalFormWrapper.classList.add('final-form__input-wrapper--error');
+    setTimeout(deleteError, 1100);
+  } else {
+    localStorage.setItem = ('username', finalFormUsername.value);
+    localStorage.setItem = ('phone', finalFormPhone.value);
+    localStorage.setItem = ('email', finalFormEmail.value);
+    popup.classList.remove('popup--closed');
+    document.body.classList.add('body__container--popup-opened');
+  }
 });
 
 onCustomSelect();
@@ -561,4 +582,5 @@ onFirstPaymentSlider();
 onCreditTimeSlider();
 onCreditTimeInput();
 popupHandler();
+phoneMask(finalFormPhone);
 

@@ -1,0 +1,25 @@
+.map {
+  margin-top: 110px;
+  margin-bottom: 110px;
+
+  h2 {
+    font-family: $roboto;
+    font-weight: 700;
+    font-size: 41px;
+    line-height: 140%;
+    margin: 0;
+    margin-bottom: 70px;
+  }
+}
+
+.map__container {
+  width: 100%;
+  max-width: 1170px;
+  margin: 0 auto;
+}
+
+.map__block {
+  width: 1170px;
+  height: 462px;
+  margin: 0 auto;
+}

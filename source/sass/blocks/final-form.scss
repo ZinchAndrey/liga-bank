@@ -50,6 +50,11 @@
   input {
     margin-bottom: 30px;
     background-color: inherit;
+    position: relative;
+
+    // &:focus {
+    //   outline: $blue;
+    // }
   }
 
   .final-form__tel,
@@ -61,4 +66,30 @@
 
 .final-form__button {
   width: 200px;
+}
+
+.final-form__input-wrapper--error {
+  animation: error 1s ease-in-out;
+}
+
+@keyframes error {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(20px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(-20px);
+  }
 }
