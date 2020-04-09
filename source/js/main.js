@@ -144,8 +144,8 @@ var requiredProfit; // требуемый доход
 /* eslint-disable */
 jQuery(document).ready(function () {
 
-  $(creditValueInput).mask('000 000 000 000 000,00 рублей', { reverse: true });
-  $(firstPaymentInput).mask('000 000 000 000 000,00 рублей', { reverse: true });
+  $(creditValueInput).mask('000 000 000 000 рублей', { reverse: true });
+  $(firstPaymentInput).mask('000 000 000 000 рублей', { reverse: true });
   $(creditTimeInput).mask('000 лет', { reverse: true });
 
 });
@@ -153,7 +153,7 @@ jQuery(document).ready(function () {
 // накладывает денежную маску на элемент
 function moneyMask(element) {
   $(element).unmask(); // внутренний метод плагина
-  $(element).mask('000 000 000 000 000,00 рублей', { reverse: true });
+  $(element).mask('000 000 000 000 рублей', { reverse: true });
 }
 
 function yearMask(element) {
@@ -333,6 +333,7 @@ function onFirstPaymentInputChange() {
 }
 
 creditValueInput.addEventListener('input', function () {
+
   unmasking(creditValueInput);
   unmasking(firstPaymentInput);
   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
