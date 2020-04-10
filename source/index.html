@@ -11,6 +11,9 @@
     <link href="fonts/Roboto-Medium.woff2" rel="preload" as="font" crossorigin="anonymous">
     <link href="fonts/Roboto-Bold.woff2" rel="preload" as="font" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.min.css" />
+    <!-- подключение API Яндекс Карт -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=e0d08d24-473b-458c-b56e-08e5272b270a&lang=ru_RU" type="text/javascript">
+    </script>
   </head>
   <body>
     <header class="page-header">
@@ -58,15 +61,15 @@
                 <div class="credit__value-block">
                   <div class="credit__value-wrapper">
                     <button class="credit__value-button credit__value-button--minus" type="button" aria-label="Кнопка минус"></button>
-                    <input class="money" type="text" id="credit__value" placeholder="2 000 000 рублей" value="2000000">
+                    <input pattern="\d{1,2}|100" class="money" type="text" id="credit__value" placeholder="2 000 000 рублей" value="2000000">
                     <button class="credit__value-button credit__value-button--plus" type="button" aria-label="Кнопка плюс"></button>
-                    <span class="credit__error-text credit__error-text--closed">Введите значение в указанных пределах</span>
+                    <span class="credit__error-text credit__error-text--closed">Некорректное значение</span>
                   </div>
                   <span id="credit-limits-label">От 1 200 000 до 25 000 000 рублей</span>
                 </div>
                 <div class="credit__first-payment-block">
                   <label for="credit__first-payment-input">Первоначальный взнос</label>
-                  <input type="text" id="credit__first-payment-input" placeholder="200 000 рублей" value="200000">
+                  <input pattern="\d{1,2}|100" type="text" id="credit__first-payment-input" placeholder="200 000 рублей" value="200000">
                   <div class="credit__first-payment-slider">
                     <input id ="credit__first-payment-slider-input" type="range" min="10" max="100" step="5" value="10">
                     <span class="credit__first-payment-percent" id="credit__first-payment-percent">10%</span>
@@ -74,7 +77,7 @@
                   </div>
                 <div class="credit__time-block">
                   <label for="credit__time-input">Срок кредитования</label>
-                  <input type="text" id="credit__time-input" placeholder="5 лет" value="5">
+                  <input pattern="\d{1,2}|100" type="text" id="credit__time-input" placeholder="5 лет" value="5">
                   <div class="credit__time-slider">
                     <input id ="credit__time-slider-input" type="range" min="5" max="30" step="1" value="5">
                     <span class="credit__time-text" id="credit__time-text">5 лет</span>
@@ -152,9 +155,9 @@
               </li>
             </ul>
             <div class="final-form__input-wrapper">
-              <input class="final-form__name" name="username" type="text" placeholder="ФИО" required>
-              <input class="final-form__tel" name="phone" type="tel" placeholder="Телефон" required>
-              <input class="final-form__email" name="mail" type="email" placeholder="E-mail" required>
+              <input class="final-form__name" name="username" type="text" placeholder="ФИО">
+              <input class="final-form__tel" name="phone" type="tel" placeholder="Телефон">
+              <input class="final-form__email" name="mail" type="email" placeholder="E-mail">
               <button class="final-form__button button" type="submit">Отправить</button>
             </div>
           </form>
@@ -165,6 +168,12 @@
           <button class="popup__close-button"></button>
           <h3>Спасибо за обращение в наш банк</h3>
           <p>Наш менеджер скоро свяжется с вами по указанному номеру телефона.</p>
+        </div>
+      </section>
+      <section class="map">
+        <div class="map__container">
+          <h2>Отделения Лига Банка</h2>
+          <div class="map__block" id="map"></div>
         </div>
       </section>
     </main>
@@ -213,5 +222,6 @@
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery.mask.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/map.js"></script>
   </body>
 </html>
