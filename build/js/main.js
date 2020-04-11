@@ -131,6 +131,7 @@ var popup = document.querySelector('.popup');
 var buttonClosePopup = document.querySelector('.popup__close-button');
 
 // остальное
+var creditCheckboxBlock = document.querySelector('.credit__checkbox-block');
 var motherCapital = document.querySelector('#credit__mother-capital');
 var casco = document.querySelector('#credit__casco');
 var creditInsurance = document.querySelector('#credit__insurance');
@@ -489,7 +490,7 @@ function reCalculate() {
   // делаем unmask всех элементов, которые используются в расчетах, в конце снова наложим маску на них
   unmasking(creditValueInput);
   unmasking(firstPaymentInput);
-
+  // мат капитал
   if (motherCapital.checked) {
     creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
   } else {
@@ -559,9 +560,24 @@ function reCalculate() {
 // в данном случае без делегирования обходиться
 // creditForm.addEventListener('input', reCalculate);
 
+creditValueInput.addEventListener('keydown', function (evt) {
+  // запрещает ввод букв и символов
+  if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+    evt.preventDefault();
+  }
+});
+
+firstPaymentInput.addEventListener('keydown', function (evt) {
+  // запрещает ввод букв и символов
+  if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+    evt.preventDefault();
+  }
+});
+
 creditValueInput.addEventListener('change', reCalculate);
 firstPaymentInput.addEventListener('change', reCalculate);
 creditTimeInput.addEventListener('input', reCalculate);
+creditCheckboxBlock.addEventListener('input', reCalculate);
 
 firstPaymentInput.addEventListener('input', function () {
   unmasking(firstPaymentInput);
@@ -569,8 +585,8 @@ firstPaymentInput.addEventListener('input', function () {
 
 creditValueInput.addEventListener('input', function () {
   unmasking(creditValueInput);
-  if (creditValueInput.value < 1) {
-    creditValueInput.value = 1;
+  if (creditValueInput.value < 0) {
+    creditValueInput.value = 0;
   }
 
   function recalcFirstPayment() {
@@ -600,7 +616,12 @@ creditPlusButton.addEventListener('click', function (evt) {
 
 creditMinusButton.addEventListener('click', function (evt) {
   evt.preventDefault();
-  creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
+  // если ноль или ничего и нажимается минус, то значение приравнивается к 0
+  if (creditValueInput.value === '' || Number(getUnmaskValue(creditValueInput)) === 0) {
+    creditValueInput.value = 0;
+  } else {
+    creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
+  }
   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
   reCalculate();
 });
