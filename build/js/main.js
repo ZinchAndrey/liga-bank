@@ -148,12 +148,15 @@ jQuery(document).ready(function () {
   $(firstPaymentInput).mask('000 000 000 000 рублей', { reverse: true });
   $(creditTimeInput).mask('000 лет', { reverse: true });
 
+  $(test).mask('000 000 000 000 рублей', { reverse: true });
+
 });
 
 // накладывает денежную маску на элемент
 function moneyMask(element) {
   $(element).unmask(); // внутренний метод плагина
   $(element).mask('000 000 000 000 рублей', { reverse: true });
+
 }
 
 function yearMask(element) {
@@ -174,6 +177,46 @@ function getUnmaskValue(element) {
 function unmasking(element) {
   $(element).unmask();
 }
+
+// test
+var test = document.querySelector('#test');
+var lastTimeout;
+
+test.addEventListener('input', function () {
+  $(test).unmask(); // внутренний метод плагина
+});
+
+test.addEventListener('change', function () {
+
+  // moneyMaskTest(test);
+  if (lastTimeout) {
+    clearTimeout(lastTimeout);
+  }
+  lastTimeout = setTimeout(function () {
+    moneyMask(test);
+    console.log('test');
+  }, 20);
+
+  // lastTimeout = setTimeout(function () {
+  //   test.focus();
+  //   console.log('focus');
+
+  // }, 2500);
+
+// setTimeout(maskingTest, 5000, test);
+});
+
+function maskingTest(element) {
+  $(element).mask('000 000 000 000 рублей', { reverse: true });
+  console.log('test');
+}
+
+function moneyMaskTest(element) {
+  // $(element).unmask(); // внутренний метод плагина
+  $(element).mask('000 000 000 000', { reverse: true });
+}
+
+// test
 /* eslint-enable */
 
 // открывает и закрывает список кастомного select
@@ -286,6 +329,7 @@ function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
 function onCreditTimeSlider() {
   creditTimeSlider.addEventListener('input', function () {
     getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+    reCalculate();
   });
 }
 
@@ -311,6 +355,7 @@ function onFirstPaymentSlider() {
     unmasking(creditValueInput);
     getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
     firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+    reCalculate();
   });
 }
 
@@ -332,99 +377,9 @@ function onFirstPaymentInputChange() {
   });
 }
 
-creditValueInput.addEventListener('input', function () {
-
-  unmasking(creditValueInput);
-  unmasking(firstPaymentInput);
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-  moneyMask(creditValueInput);
-  moneyMask(firstPaymentInput);
-});
-creditValueInput.addEventListener('change', function () {
-  unmasking(creditValueInput);
-  unmasking(firstPaymentInput);
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-  moneyMask(creditValueInput);
-  moneyMask(firstPaymentInput);
-});
-
 // добавляет в разметку значения по кредиту
 function showOffer(element, value, dimension) {
   element.textContent = value + dimension;
-}
-
-// пересчитывает значения в разделе "Наше предложение"
-function reCalculate() {
-
-  // делаем unmask всех элементов, которые используются в расчетах, в конце снова наложим маску на них
-  unmasking(creditValueInput);
-  unmasking(firstPaymentInput);
-
-  if (motherCapital.checked) {
-    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
-  } else {
-    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
-  }
-
-  // изменение процентной ставки - вынести в функцию
-  if (goal.value === 'hypothec') {
-    if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
-      percentRate = PERCENT_MAX;
-    } else {
-      percentRate = PERCENT_MIN;
-    }
-  }
-
-  if (goal.value === 'autocredit') {
-    percentRate = PERCENT_AUTO_HIGH;
-    if (creditValueInput.value >= AUTOCREDIT_VALUE_LIMIT_PERCENT) {
-      percentRate = PERCENT_AUTO_MIDDLE;
-    }
-
-    if (casco.checked && creditInsurance.checked) {
-      percentRate = PERCENT_AUTO_LOWEST;
-    } else if (casco.checked || creditInsurance.checked) {
-      percentRate = PERCENT_AUTO_LOW;
-    }
-  }
-
-  if (goal.value === 'consumer') {
-    if (creditValueInput.value < CONSUMER_VALUE_LIMIT_LOW) {
-      percentRate = PERCENT_CONSUMER_HIGH;
-    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_LOW && creditValueInput.value < CONSUMER_VALUE_LIMIT_HIGH) {
-      percentRate = PERCENT_CONSUMER_MIDDLE;
-    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_HIGH) {
-      percentRate = PERCENT_CONSUMER_LOW;
-    }
-
-    if (salaryClient.checked === true) {
-      percentRate = percentRate - PERCENT_CONSUMER_DELTA;
-    }
-  }
-
-  showErrorCreditValue();
-  showErrorBlock();
-
-  var years = creditTimeSlider.value;
-  var months = years * MONTHS_PER_YEAR;
-  // вывод в HTML разметку полученных значений в раздел "Наше предложение"
-  showOffer(offerPercentRate, percentRate, '%');
-  showOffer(offerCreditValue, creditSum, '');
-
-  percentRateMonth = percentRate * PERCENT_COEF / MONTHS_PER_YEAR;
-  monthPayment = Math.trunc(creditSum * (percentRateMonth + percentRateMonth / (Math.pow((1 + percentRateMonth), months) - 1)));
-  showOffer(offerMonthPayment, monthPayment, '');
-
-  requiredProfit = Math.trunc(monthPayment / REQUIRED_PROFIT_RATIO);
-  showOffer(offerRequiredProfit, requiredProfit, '');
-
-  // наложение масок
-  moneyMask(creditValueInput);
-  moneyMask(firstPaymentInput);
-  moneyMask(offerCreditValue);
-  moneyMask(offerMonthPayment);
-  moneyMask(offerRequiredProfit);
-  yearMask(creditTimeInput);
 }
 
 // меняет подписи в зависимости от типа кредита
@@ -522,19 +477,103 @@ function popupHandler() {
   buttonClosePopup.addEventListener('click', function () {
     closePopup();
   });
-
-  // finalForm.addEventListener('submit', function (evt) {
-  //   evt.preventDefault();
-  //   popup.classList.remove('popup--closed');
-  //   document.body.classList.add('body__container--popup-opened');
-  // });
 }
 // удаляет класс тряски формы при ошибке
 function deleteError() {
   finalFormWrapper.classList.remove('final-form__input-wrapper--error');
 }
 
-creditForm.addEventListener('input', reCalculate);
+// пересчитывает значения в разделе "Наше предложение"
+function reCalculate() {
+
+  // делаем unmask всех элементов, которые используются в расчетах, в конце снова наложим маску на них
+  unmasking(creditValueInput);
+  unmasking(firstPaymentInput);
+
+  if (motherCapital.checked) {
+    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
+  } else {
+    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
+  }
+
+  // изменение процентной ставки - вынести в функцию
+  if (goal.value === 'hypothec') {
+    if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
+      percentRate = PERCENT_MAX;
+    } else {
+      percentRate = PERCENT_MIN;
+    }
+  }
+
+  if (goal.value === 'autocredit') {
+    percentRate = PERCENT_AUTO_HIGH;
+    if (creditValueInput.value >= AUTOCREDIT_VALUE_LIMIT_PERCENT) {
+      percentRate = PERCENT_AUTO_MIDDLE;
+    }
+
+    if (casco.checked && creditInsurance.checked) {
+      percentRate = PERCENT_AUTO_LOWEST;
+    } else if (casco.checked || creditInsurance.checked) {
+      percentRate = PERCENT_AUTO_LOW;
+    }
+  }
+
+  if (goal.value === 'consumer') {
+    if (creditValueInput.value < CONSUMER_VALUE_LIMIT_LOW) {
+      percentRate = PERCENT_CONSUMER_HIGH;
+    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_LOW && creditValueInput.value < CONSUMER_VALUE_LIMIT_HIGH) {
+      percentRate = PERCENT_CONSUMER_MIDDLE;
+    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_HIGH) {
+      percentRate = PERCENT_CONSUMER_LOW;
+    }
+
+    if (salaryClient.checked === true) {
+      percentRate = percentRate - PERCENT_CONSUMER_DELTA;
+    }
+  }
+
+  showErrorCreditValue();
+  showErrorBlock();
+
+  var years = creditTimeSlider.value;
+  var months = years * MONTHS_PER_YEAR;
+  // вывод в HTML разметку полученных значений в раздел "Наше предложение"
+  showOffer(offerPercentRate, percentRate, '%');
+  showOffer(offerCreditValue, creditSum, '');
+
+  percentRateMonth = percentRate * PERCENT_COEF / MONTHS_PER_YEAR;
+  monthPayment = Math.trunc(creditSum * (percentRateMonth + percentRateMonth / (Math.pow((1 + percentRateMonth), months) - 1)));
+  showOffer(offerMonthPayment, monthPayment, '');
+
+  requiredProfit = Math.trunc(monthPayment / REQUIRED_PROFIT_RATIO);
+  showOffer(offerRequiredProfit, requiredProfit, '');
+
+  // наложение масок
+  moneyMask(creditValueInput);
+  moneyMask(firstPaymentInput);
+  moneyMask(offerCreditValue);
+  moneyMask(offerMonthPayment);
+  moneyMask(offerRequiredProfit);
+  yearMask(creditTimeInput);
+}
+// в данном случае без делегирования обходиться
+// creditForm.addEventListener('input', reCalculate);
+
+creditValueInput.addEventListener('change', reCalculate);
+firstPaymentInput.addEventListener('change', reCalculate);
+creditTimeInput.addEventListener('input', reCalculate);
+
+firstPaymentInput.addEventListener('input', function () {
+  unmasking(firstPaymentInput);
+});
+
+creditValueInput.addEventListener('input', function () {
+  unmasking(creditValueInput);
+  unmasking(firstPaymentInput);
+  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+  // moneyMask(creditValueInput);
+  moneyMask(firstPaymentInput);
+});
 
 // увеличение и уменьшение суммы кредита по клику
 creditPlusButton.addEventListener('click', function (evt) {
@@ -542,7 +581,6 @@ creditPlusButton.addEventListener('click', function (evt) {
   creditValueInput.value = Number(getUnmaskValue(creditValueInput)) + creditStep;
   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
   reCalculate();
-  moneyMask(creditValueInput);
 });
 
 creditMinusButton.addEventListener('click', function (evt) {
@@ -550,7 +588,6 @@ creditMinusButton.addEventListener('click', function (evt) {
   creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
   reCalculate();
-  moneyMask(creditValueInput);
 });
 
 requestButton.addEventListener('click', function (evt) {
@@ -559,6 +596,12 @@ requestButton.addEventListener('click', function (evt) {
   changeFinalForm();
   finalFormUsername.focus();
 });
+
+// requestButton.addEventListener('keydown', function (evt) {
+//   if (evt.keyCode === 13) {
+//     evt.preventDefault();
+//   }
+// });
 
 // добавление в localStorage полей формы
 finalForm.addEventListener('submit', function (evt) {

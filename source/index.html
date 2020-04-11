@@ -56,6 +56,7 @@
                 </div>
               </fieldset>
               <fieldset class="credit__parameters closed">
+                <!-- добавить класс close -->
                 <h3>Шаг 2. Введите параметры кредита</h3>
                 <label for="credit__value" id="credit-label">Стоимость недвижимости</label>
                 <div class="credit__value-block">
@@ -74,6 +75,7 @@
                     <input id ="credit__first-payment-slider-input" type="range" min="10" max="100" step="5" value="10">
                     <span class="credit__first-payment-percent" id="credit__first-payment-percent">10%</span>
                   </div>
+                  <input type="text" value="500000" id="test" autofocus>
                   </div>
                 <div class="credit__time-block">
                   <label for="credit__time-input">Срок кредитования</label>
@@ -218,7 +220,6 @@
         </ul>
       </div>
     </footer>
-    <!-- <script src="js/inputmask.min.js"></script> -->
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery.mask.js"></script>
     <script src="js/main.js"></script>
