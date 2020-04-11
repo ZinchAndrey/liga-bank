@@ -571,7 +571,6 @@ creditValueInput.addEventListener('input', function () {
   unmasking(creditValueInput);
   unmasking(firstPaymentInput);
   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-  // moneyMask(creditValueInput);
   moneyMask(firstPaymentInput);
 });
 
