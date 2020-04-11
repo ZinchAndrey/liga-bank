@@ -355,7 +355,7 @@ function onFirstPaymentSlider() {
   firstPaymentSlider.addEventListener('input', function () {
     unmasking(creditValueInput);
     getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
-    firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+    firstPaymentInput.value = Math.trunc(creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF);
     reCalculate();
   });
 }
@@ -372,7 +372,7 @@ function onFirstPaymentInputChange() {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
       firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
     }
-
+    firstPaymentInput.value = Math.trunc(firstPaymentInput.value);
     moneyMask(creditValueInput);
     moneyMask(firstPaymentInput);
   });
@@ -549,6 +549,8 @@ function reCalculate() {
   requiredProfit = Math.trunc(monthPayment / REQUIRED_PROFIT_RATIO);
   showOffer(offerRequiredProfit, requiredProfit, '');
 
+  // firstPaymentInput.value = Math.trunc(firstPaymentInput.value);
+
   // наложение масок
   moneyMask(creditValueInput);
   moneyMask(firstPaymentInput);
@@ -575,7 +577,9 @@ firstPaymentInput.addEventListener('keydown', function (evt) {
 });
 
 creditValueInput.addEventListener('change', reCalculate);
+// test
 firstPaymentInput.addEventListener('change', reCalculate);
+// test
 creditTimeInput.addEventListener('input', reCalculate);
 creditCheckboxBlock.addEventListener('input', reCalculate);
 
@@ -585,9 +589,6 @@ firstPaymentInput.addEventListener('input', function () {
 
 creditValueInput.addEventListener('input', function () {
   unmasking(creditValueInput);
-  if (creditValueInput.value < 0) {
-    creditValueInput.value = 0;
-  }
 
   function recalcFirstPayment() {
     var lastTimeout;
@@ -621,6 +622,9 @@ creditMinusButton.addEventListener('click', function (evt) {
     creditValueInput.value = 0;
   } else {
     creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
+    if (creditValueInput.value < 0) {
+      creditValueInput.value = 0;
+    }
   }
   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
   reCalculate();
