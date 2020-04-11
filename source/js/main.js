@@ -148,7 +148,7 @@ jQuery(document).ready(function () {
   $(firstPaymentInput).mask('000 000 000 000 рублей', { reverse: true });
   $(creditTimeInput).mask('000 лет', { reverse: true });
 
-  $(test).mask('000 000 000 000 рублей', { reverse: true });
+  // $(test).mask('000 000 000 000 рублей', { reverse: true });
 
 });
 
@@ -179,42 +179,42 @@ function unmasking(element) {
 }
 
 // test
-var test = document.querySelector('#test');
-var lastTimeout;
+// var test = document.querySelector('#test');
+// var lastTimeout;
 
-test.addEventListener('input', function () {
-  $(test).unmask(); // внутренний метод плагина
-});
+// test.addEventListener('input', function () {
+//   $(test).unmask(); // внутренний метод плагина
+// });
 
-test.addEventListener('change', function () {
+// test.addEventListener('change', function () {
 
-  // moneyMaskTest(test);
-  if (lastTimeout) {
-    clearTimeout(lastTimeout);
-  }
-  lastTimeout = setTimeout(function () {
-    moneyMask(test);
-    console.log('test');
-  }, 20);
+//   // moneyMaskTest(test);
+//   if (lastTimeout) {
+//     clearTimeout(lastTimeout);
+//   }
+//   lastTimeout = setTimeout(function () {
+//     moneyMask(test);
+//     console.log('test');
+//   }, 20);
 
-  // lastTimeout = setTimeout(function () {
-  //   test.focus();
-  //   console.log('focus');
+//   // lastTimeout = setTimeout(function () {
+//   //   test.focus();
+//   //   console.log('focus');
 
-  // }, 2500);
+//   // }, 2500);
 
-// setTimeout(maskingTest, 5000, test);
-});
+// // setTimeout(maskingTest, 5000, test);
+// });
 
-function maskingTest(element) {
-  $(element).mask('000 000 000 000 рублей', { reverse: true });
-  console.log('test');
-}
+// function maskingTest(element) {
+//   $(element).mask('000 000 000 000 рублей', { reverse: true });
+//   console.log('test');
+// }
 
-function moneyMaskTest(element) {
-  // $(element).unmask(); // внутренний метод плагина
-  $(element).mask('000 000 000 000', { reverse: true });
-}
+// function moneyMaskTest(element) {
+//   // $(element).unmask(); // внутренний метод плагина
+//   $(element).mask('000 000 000 000', { reverse: true });
+// }
 
 // test
 /* eslint-enable */
