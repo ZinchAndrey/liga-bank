@@ -569,9 +569,25 @@ firstPaymentInput.addEventListener('input', function () {
 
 creditValueInput.addEventListener('input', function () {
   unmasking(creditValueInput);
-  unmasking(firstPaymentInput);
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-  moneyMask(firstPaymentInput);
+  if (creditValueInput.value < 1) {
+    creditValueInput.value = 1;
+  }
+
+  function recalcFirstPayment() {
+    var lastTimeout;
+    if (lastTimeout) {
+      clearTimeout(lastTimeout);
+    }
+    lastTimeout = setTimeout(function () {
+      unmasking(firstPaymentInput);
+      firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+      if (firstPaymentInput.value < 1) {
+        firstPaymentInput.value = 1;
+      }
+      moneyMask(firstPaymentInput);
+    }, 10);
+  }
+  recalcFirstPayment();
 });
 
 // увеличение и уменьшение суммы кредита по клику
@@ -595,12 +611,6 @@ requestButton.addEventListener('click', function (evt) {
   changeFinalForm();
   finalFormUsername.focus();
 });
-
-// requestButton.addEventListener('keydown', function (evt) {
-//   if (evt.keyCode === 13) {
-//     evt.preventDefault();
-//   }
-// });
 
 // добавление в localStorage полей формы
 finalForm.addEventListener('submit', function (evt) {
