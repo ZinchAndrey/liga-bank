@@ -545,10 +545,31 @@ firstPaymentInput.addEventListener('keydown', function (evt) {
   }
 });
 
-creditValueInput.addEventListener('change', reCalculate);
-// test
+creditValueInput.addEventListener('change', function () {
+  // // возвращает первоначальный взнос в минимальное значение
+  // firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+  // firstPaymentInput.value = getUnmaskValue(creditValueInput) * firstPaymentSlider.value * PERCENT_COEF;
+  // firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+  // // пересчет количества лет, точнее надписей
+  // getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+
+  // тест
+  // unmasking(creditValueInput);
+
+  function recalcFirstPayment() {
+    unmasking(firstPaymentInput);
+    // необходимо возвращать слайдер в минимальное значение
+    firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+    if (firstPaymentInput.value < 1) {
+      firstPaymentInput.value = 0;
+    }
+    moneyMask(firstPaymentInput);
+  }
+  recalcFirstPayment();
+  // тест
+  reCalculate();
+});
 firstPaymentInput.addEventListener('change', reCalculate);
-// test
 creditTimeInput.addEventListener('input', reCalculate);
 creditCheckboxBlock.addEventListener('input', reCalculate);
 
@@ -559,21 +580,21 @@ firstPaymentInput.addEventListener('input', function () {
 creditValueInput.addEventListener('input', function () {
   unmasking(creditValueInput);
 
-  function recalcFirstPayment() {
-    var lastTimeout;
-    if (lastTimeout) {
-      clearTimeout(lastTimeout);
-    }
-    lastTimeout = setTimeout(function () {
-      unmasking(firstPaymentInput);
-      firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
-      if (firstPaymentInput.value < 1) {
-        firstPaymentInput.value = 0;
-      }
-      moneyMask(firstPaymentInput);
-    }, 10);
-  }
-  recalcFirstPayment();
+  // function recalcFirstPayment() {
+  //   var lastTimeout;
+  //   if (lastTimeout) {
+  //     clearTimeout(lastTimeout);
+  //   }
+  //   lastTimeout = setTimeout(function () {
+  //     unmasking(firstPaymentInput);
+  //     firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+  //     if (firstPaymentInput.value < 1) {
+  //       firstPaymentInput.value = 0;
+  //     }
+  //     moneyMask(firstPaymentInput);
+  //   }, 10);
+  // }
+  // recalcFirstPayment();
 });
 
 // увеличение и уменьшение суммы кредита по клику
