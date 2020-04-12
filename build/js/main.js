@@ -325,12 +325,13 @@ function onFirstPaymentInputChange() {
   firstPaymentInput.addEventListener('change', function () {
     unmasking(creditValueInput);
     unmasking(firstPaymentInput);
+    var firstPay = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
     firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
     // проверка на выход из максимального и минимального значения процентной ставки
-    if (firstPaymentSlider.value < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
+    if (firstPay < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
       firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
-    } else if (firstPaymentSlider.value > CreditSettings[goal.value].CREDIT_PERCENT_MAX) {
+    } else if (firstPay > CreditSettings[goal.value].CREDIT_PERCENT_MAX) {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MAX;
       firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
     }
@@ -523,6 +524,17 @@ function reCalculate() {
   moneyMask(offerRequiredProfit);
   yearMask(creditTimeInput);
 }
+
+function recalcFirstPayment() {
+  unmasking(firstPaymentInput);
+  // возвращает слайдер в минимальное значение
+  firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+  firstPaymentInput.value = Math.trunc(creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF);
+  firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+  // пересчет количества лет, точнее надписей
+  moneyMask(firstPaymentInput);
+}
 // в данном случае без делегирования обходиться
 // creditForm.addEventListener('input', reCalculate);
 
@@ -541,19 +553,6 @@ firstPaymentInput.addEventListener('keydown', function (evt) {
 });
 
 creditValueInput.addEventListener('change', function () {
-  function recalcFirstPayment() {
-    unmasking(firstPaymentInput);
-    // возвращает слайдер в минимальное значение
-    firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
-    getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
-    // if (firstPaymentInput.value < 1) {
-    //   firstPaymentInput.value = 0;
-    // }
-    firstPaymentInput.value = Math.trunc(creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF);
-    firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
-    // пересчет количества лет, точнее надписей
-    moneyMask(firstPaymentInput);
-  }
   recalcFirstPayment();
   reCalculate();
 });
@@ -589,7 +588,7 @@ creditValueInput.addEventListener('input', function () {
 creditPlusButton.addEventListener('click', function (evt) {
   evt.preventDefault();
   creditValueInput.value = Number(getUnmaskValue(creditValueInput)) + creditStep;
-  firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+  recalcFirstPayment();
   reCalculate();
 });
 
@@ -604,7 +603,7 @@ creditMinusButton.addEventListener('click', function (evt) {
       creditValueInput.value = 0;
     }
   }
-  firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+  recalcFirstPayment();
   reCalculate();
 });
 
