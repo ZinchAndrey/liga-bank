@@ -179,47 +179,6 @@ function unmasking(element) {
   $(element).unmask();
 }
 
-// test
-// var test = document.querySelector('#test');
-// var lastTimeout;
-
-// test.addEventListener('input', function () {
-//   $(test).unmask(); // внутренний метод плагина
-// });
-
-// test.addEventListener('change', function () {
-
-//   // moneyMaskTest(test);
-//   if (lastTimeout) {
-//     clearTimeout(lastTimeout);
-//   }
-//   lastTimeout = setTimeout(function () {
-//     moneyMask(test);
-//     console.log('test');
-//   }, 20);
-
-//   // lastTimeout = setTimeout(function () {
-//   //   test.focus();
-//   //   console.log('focus');
-
-//   // }, 2500);
-
-// // setTimeout(maskingTest, 5000, test);
-// });
-
-// function maskingTest(element) {
-//   $(element).mask('000 000 000 000 рублей', { reverse: true });
-//   console.log('test');
-// }
-
-// function moneyMaskTest(element) {
-//   // $(element).unmask(); // внутренний метод плагина
-//   $(element).mask('000 000 000 000', { reverse: true });
-// }
-
-// test
-/* eslint-enable */
-
 // открывает и закрывает список кастомного select
 function onCustomSelect() {
   activeSelect.addEventListener('click', function () {
@@ -366,13 +325,22 @@ function onFirstPaymentInputChange() {
     unmasking(creditValueInput);
     unmasking(firstPaymentInput);
     firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
-    firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
-    var firstPay = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
-    if (firstPay < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
+    if (firstPaymentSlider.value < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
-      firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+    } else if (firstPaymentSlider.value > CreditSettings[goal.value].CREDIT_PERCENT_MAX) {
+      firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MAX;
     }
-    firstPaymentInput.value = Math.trunc(firstPaymentInput.value);
+    firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+    firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+
+    // var firstPay = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+    // if (firstPay < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
+    //   firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+    //   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+    // } else if (firstPaymentInput.value > creditValueInput.value) {
+    //   firstPaymentInput.value = creditValueInput.value;
+    // }
+    // firstPaymentInput.value = Math.trunc(firstPaymentInput.value);
     moneyMask(creditValueInput);
     moneyMask(firstPaymentInput);
   });
@@ -520,6 +488,7 @@ function reCalculate() {
   }
 
   if (goal.value === 'consumer') {
+    // firstPaymentInput.value = 0;
     if (creditValueInput.value < CONSUMER_VALUE_LIMIT_LOW) {
       percentRate = PERCENT_CONSUMER_HIGH;
     } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_LOW && creditValueInput.value < CONSUMER_VALUE_LIMIT_HIGH) {
@@ -599,7 +568,7 @@ creditValueInput.addEventListener('input', function () {
       unmasking(firstPaymentInput);
       firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
       if (firstPaymentInput.value < 1) {
-        firstPaymentInput.value = 1;
+        firstPaymentInput.value = 0;
       }
       moneyMask(firstPaymentInput);
     }, 10);
@@ -611,7 +580,7 @@ creditValueInput.addEventListener('input', function () {
 creditPlusButton.addEventListener('click', function (evt) {
   evt.preventDefault();
   creditValueInput.value = Number(getUnmaskValue(creditValueInput)) + creditStep;
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+  firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
   reCalculate();
 });
 
@@ -626,7 +595,7 @@ creditMinusButton.addEventListener('click', function (evt) {
       creditValueInput.value = 0;
     }
   }
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+  firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
   reCalculate();
 });
 
