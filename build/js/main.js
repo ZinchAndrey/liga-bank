@@ -276,6 +276,7 @@ function makeActiveItem() {
     onSelectItemChange();
     creditOfferBlock.classList.remove('closed');
     creditParameters.classList.remove('closed');
+    reCalculate();
   });
 }
 
@@ -325,6 +326,7 @@ function onFirstPaymentInputChange() {
     unmasking(creditValueInput);
     unmasking(firstPaymentInput);
     firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+    // проверка на выход из максимального и минимального значения процентной ставки
     if (firstPaymentSlider.value < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
       firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
@@ -333,16 +335,6 @@ function onFirstPaymentInputChange() {
       firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
     }
     firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
-
-
-    // var firstPay = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
-    // if (firstPay < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
-    //   firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
-    //   firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-    // } else if (firstPaymentInput.value > creditValueInput.value) {
-    //   firstPaymentInput.value = creditValueInput.value;
-    // }
-    // firstPaymentInput.value = Math.trunc(firstPaymentInput.value);
     moneyMask(creditValueInput);
     moneyMask(firstPaymentInput);
     reCalculate();
