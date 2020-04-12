@@ -327,11 +327,13 @@ function onFirstPaymentInputChange() {
     firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
     if (firstPaymentSlider.value < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+      firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
     } else if (firstPaymentSlider.value > CreditSettings[goal.value].CREDIT_PERCENT_MAX) {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MAX;
+      firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
     }
     firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
-    firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+
 
     // var firstPay = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
     // if (firstPay < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
@@ -343,6 +345,7 @@ function onFirstPaymentInputChange() {
     // firstPaymentInput.value = Math.trunc(firstPaymentInput.value);
     moneyMask(creditValueInput);
     moneyMask(firstPaymentInput);
+    reCalculate();
   });
 }
 
@@ -548,24 +551,21 @@ firstPaymentInput.addEventListener('keydown', function (evt) {
 creditValueInput.addEventListener('change', function () {
   function recalcFirstPayment() {
     unmasking(firstPaymentInput);
-    // необходимо возвращать слайдер в минимальное значение
-    // firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
-
+    // возвращает слайдер в минимальное значение
     firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
-    firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+    getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+    // if (firstPaymentInput.value < 1) {
+    //   firstPaymentInput.value = 0;
+    // }
+    firstPaymentInput.value = Math.trunc(creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF);
     firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
     // пересчет количества лет, точнее надписей
-    getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
-    if (firstPaymentInput.value < 1) {
-      firstPaymentInput.value = 0;
-    }
     moneyMask(firstPaymentInput);
   }
   recalcFirstPayment();
-  // тест
   reCalculate();
 });
-firstPaymentInput.addEventListener('change', reCalculate);
+// firstPaymentInput.addEventListener('change', reCalculate);
 creditTimeInput.addEventListener('input', reCalculate);
 creditCheckboxBlock.addEventListener('input', reCalculate);
 
