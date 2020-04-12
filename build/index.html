@@ -56,6 +56,7 @@
                 </div>
               </fieldset>
               <fieldset class="credit__parameters closed">
+                <!-- добавить класс close -->
                 <h3>Шаг 2. Введите параметры кредита</h3>
                 <label for="credit__value" id="credit-label">Стоимость недвижимости</label>
                 <div class="credit__value-block">
@@ -74,7 +75,7 @@
                     <input id="credit__first-payment-slider-input" type="range" min="10" max="100" step="5" value="10">
                     <span class="credit__first-payment-percent" id="credit__first-payment-percent">10%</span>
                   </div>
-                  </div>
+                </div>
                 <div class="credit__time-block">
                   <label for="credit__time-input">Срок кредитования</label>
                   <input pattern="\d{1,2}|100" type="text" id="credit__time-input" placeholder="5 лет" value="5">
@@ -83,21 +84,23 @@
                     <span class="credit__time-text" id="credit__time-text">5 лет</span>
                   </div>
                 </div>
-                <div class="credit__checkbox credit__checkbox--mother-capital">
-                  <input class="visually-hidden" type="checkbox" id="credit__mother-capital">
-                  <label for="credit__mother-capital">Использовать материнский капитал</label>
-                </div>
-                <div class="credit__checkbox credit__checkbox--casco">
-                  <input class="visually-hidden" type="checkbox" id="credit__casco">
-                  <label for="credit__casco">Оформить КАСКО в нашем банке</label>
-                </div>
-                <div class="credit__checkbox credit__checkbox--insurance">
-                  <input class="visually-hidden" type="checkbox" id="credit__insurance">
-                  <label for="credit__insurance">Оформить cтрахование жизни в нашем банке</label>
-                </div>
-                <div class="credit__checkbox credit__checkbox--salary">
-                  <input class="visually-hidden" type="checkbox" id="credit__salary">
-                  <label for="credit__salary">Участник зарплатного проекта нашего банка</label>
+                <div class="credit__checkbox-block">
+                  <div class="credit__checkbox credit__checkbox--mother-capital">
+                    <input class="visually-hidden" type="checkbox" id="credit__mother-capital">
+                    <label for="credit__mother-capital">Использовать материнский капитал</label>
+                  </div>
+                  <div class="credit__checkbox credit__checkbox--casco">
+                    <input class="visually-hidden" type="checkbox" id="credit__casco">
+                    <label for="credit__casco">Оформить КАСКО в нашем банке</label>
+                  </div>
+                  <div class="credit__checkbox credit__checkbox--insurance">
+                    <input class="visually-hidden" type="checkbox" id="credit__insurance">
+                    <label for="credit__insurance">Оформить cтрахование жизни в нашем банке</label>
+                  </div>
+                  <div class="credit__checkbox credit__checkbox--salary">
+                    <input class="visually-hidden" type="checkbox" id="credit__salary">
+                    <label for="credit__salary">Участник зарплатного проекта нашего банка</label>
+                  </div>
                 </div>
               </fieldset>
             </div>
@@ -122,7 +125,7 @@
                     <p class="credit__offer-label">Необходимый доход</p>
                   </li>
                 </ul>
-                <button class="credit__offer-button button" type="submit">Оформить заявку</button>
+                <button class="credit__offer-button button" type="button">Оформить заявку</button>
               </div>
             </fieldset>
             <div class="credit__error closed">
@@ -218,7 +221,6 @@
         </ul>
       </div>
     </footer>
-    <!-- <script src="js/inputmask.min.js"></script> -->
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery.mask.js"></script>
     <script src="js/main.js"></script>

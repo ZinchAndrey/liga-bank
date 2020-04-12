@@ -131,6 +131,7 @@ var popup = document.querySelector('.popup');
 var buttonClosePopup = document.querySelector('.popup__close-button');
 
 // остальное
+var creditCheckboxBlock = document.querySelector('.credit__checkbox-block');
 var motherCapital = document.querySelector('#credit__mother-capital');
 var casco = document.querySelector('#credit__casco');
 var creditInsurance = document.querySelector('#credit__insurance');
@@ -148,12 +149,15 @@ jQuery(document).ready(function () {
   $(firstPaymentInput).mask('000 000 000 000 рублей', { reverse: true });
   $(creditTimeInput).mask('000 лет', { reverse: true });
 
+  // $(test).mask('000 000 000 000 рублей', { reverse: true });
+
 });
 
 // накладывает денежную маску на элемент
 function moneyMask(element) {
   $(element).unmask(); // внутренний метод плагина
   $(element).mask('000 000 000 000 рублей', { reverse: true });
+
 }
 
 function yearMask(element) {
@@ -174,7 +178,6 @@ function getUnmaskValue(element) {
 function unmasking(element) {
   $(element).unmask();
 }
-/* eslint-enable */
 
 // открывает и закрывает список кастомного select
 function onCustomSelect() {
@@ -273,6 +276,7 @@ function makeActiveItem() {
     onSelectItemChange();
     creditOfferBlock.classList.remove('closed');
     creditParameters.classList.remove('closed');
+    reCalculate();
   });
 }
 
@@ -286,6 +290,7 @@ function getSliderToInput(sliderInput, inputField, sliderLabel, dimension) {
 function onCreditTimeSlider() {
   creditTimeSlider.addEventListener('input', function () {
     getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+    reCalculate();
   });
 }
 
@@ -310,7 +315,8 @@ function onFirstPaymentSlider() {
   firstPaymentSlider.addEventListener('input', function () {
     unmasking(creditValueInput);
     getSliderToInput(firstPaymentSlider, firstPaymentInput, firstPaymentPercent, '%');
-    firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+    firstPaymentInput.value = Math.trunc(creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF);
+    reCalculate();
   });
 }
 
@@ -319,112 +325,26 @@ function onFirstPaymentInputChange() {
   firstPaymentInput.addEventListener('change', function () {
     unmasking(creditValueInput);
     unmasking(firstPaymentInput);
-    firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
-    firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
     var firstPay = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+    firstPaymentSlider.value = firstPaymentInput.value / creditValueInput.value / PERCENT_COEF;
+    // проверка на выход из максимального и минимального значения процентной ставки
     if (firstPay < CreditSettings[goal.value].CREDIT_PERCENT_MIN) {
       firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
-      firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+      firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+    } else if (firstPay > CreditSettings[goal.value].CREDIT_PERCENT_MAX) {
+      firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MAX;
+      firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
     }
-
+    firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
     moneyMask(creditValueInput);
     moneyMask(firstPaymentInput);
+    reCalculate();
   });
 }
-
-creditValueInput.addEventListener('input', function () {
-
-  unmasking(creditValueInput);
-  unmasking(firstPaymentInput);
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-  moneyMask(creditValueInput);
-  moneyMask(firstPaymentInput);
-});
-creditValueInput.addEventListener('change', function () {
-  unmasking(creditValueInput);
-  unmasking(firstPaymentInput);
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-  moneyMask(creditValueInput);
-  moneyMask(firstPaymentInput);
-});
 
 // добавляет в разметку значения по кредиту
 function showOffer(element, value, dimension) {
   element.textContent = value + dimension;
-}
-
-// пересчитывает значения в разделе "Наше предложение"
-function reCalculate() {
-
-  // делаем unmask всех элементов, которые используются в расчетах, в конце снова наложим маску на них
-  unmasking(creditValueInput);
-  unmasking(firstPaymentInput);
-
-  if (motherCapital.checked) {
-    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
-  } else {
-    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
-  }
-
-  // изменение процентной ставки - вынести в функцию
-  if (goal.value === 'hypothec') {
-    if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
-      percentRate = PERCENT_MAX;
-    } else {
-      percentRate = PERCENT_MIN;
-    }
-  }
-
-  if (goal.value === 'autocredit') {
-    percentRate = PERCENT_AUTO_HIGH;
-    if (creditValueInput.value >= AUTOCREDIT_VALUE_LIMIT_PERCENT) {
-      percentRate = PERCENT_AUTO_MIDDLE;
-    }
-
-    if (casco.checked && creditInsurance.checked) {
-      percentRate = PERCENT_AUTO_LOWEST;
-    } else if (casco.checked || creditInsurance.checked) {
-      percentRate = PERCENT_AUTO_LOW;
-    }
-  }
-
-  if (goal.value === 'consumer') {
-    if (creditValueInput.value < CONSUMER_VALUE_LIMIT_LOW) {
-      percentRate = PERCENT_CONSUMER_HIGH;
-    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_LOW && creditValueInput.value < CONSUMER_VALUE_LIMIT_HIGH) {
-      percentRate = PERCENT_CONSUMER_MIDDLE;
-    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_HIGH) {
-      percentRate = PERCENT_CONSUMER_LOW;
-    }
-
-    if (salaryClient.checked === true) {
-      percentRate = percentRate - PERCENT_CONSUMER_DELTA;
-    }
-  }
-
-  showErrorCreditValue();
-  showErrorBlock();
-
-  var years = creditTimeSlider.value;
-  var months = years * MONTHS_PER_YEAR;
-  // вывод в HTML разметку полученных значений в раздел "Наше предложение"
-  showOffer(offerPercentRate, percentRate, '%');
-  showOffer(offerCreditValue, creditSum, '');
-
-  percentRateMonth = percentRate * PERCENT_COEF / MONTHS_PER_YEAR;
-  monthPayment = Math.trunc(creditSum * (percentRateMonth + percentRateMonth / (Math.pow((1 + percentRateMonth), months) - 1)));
-  showOffer(offerMonthPayment, monthPayment, '');
-
-  requiredProfit = Math.trunc(monthPayment / REQUIRED_PROFIT_RATIO);
-  showOffer(offerRequiredProfit, requiredProfit, '');
-
-  // наложение масок
-  moneyMask(creditValueInput);
-  moneyMask(firstPaymentInput);
-  moneyMask(offerCreditValue);
-  moneyMask(offerMonthPayment);
-  moneyMask(offerRequiredProfit);
-  yearMask(creditTimeInput);
 }
 
 // меняет подписи в зависимости от типа кредита
@@ -522,66 +442,195 @@ function popupHandler() {
   buttonClosePopup.addEventListener('click', function () {
     closePopup();
   });
-
-  // finalForm.addEventListener('submit', function (evt) {
-  //   evt.preventDefault();
-  //   popup.classList.remove('popup--closed');
-  //   document.body.classList.add('body__container--popup-opened');
-  // });
 }
 // удаляет класс тряски формы при ошибке
 function deleteError() {
   finalFormWrapper.classList.remove('final-form__input-wrapper--error');
 }
 
-creditForm.addEventListener('input', reCalculate);
+// пересчитывает значения в разделе "Наше предложение"
+function reCalculate() {
+
+  // делаем unmask всех элементов, которые используются в расчетах, в конце снова наложим маску на них
+  unmasking(creditValueInput);
+  unmasking(firstPaymentInput);
+  // мат капитал
+  if (motherCapital.checked) {
+    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value) - MOTH_CAP;
+  } else {
+    creditSum = Number(creditValueInput.value) - Number(firstPaymentInput.value);
+  }
+
+  // изменение процентной ставки - вынести в функцию
+  if (goal.value === 'hypothec') {
+    if (Number(firstPaymentSlider.value) < PERCENT_CHANGE_LIMIT) {
+      percentRate = PERCENT_MAX;
+    } else {
+      percentRate = PERCENT_MIN;
+    }
+  }
+
+  if (goal.value === 'autocredit') {
+    percentRate = PERCENT_AUTO_HIGH;
+    if (creditValueInput.value >= AUTOCREDIT_VALUE_LIMIT_PERCENT) {
+      percentRate = PERCENT_AUTO_MIDDLE;
+    }
+
+    if (casco.checked && creditInsurance.checked) {
+      percentRate = PERCENT_AUTO_LOWEST;
+    } else if (casco.checked || creditInsurance.checked) {
+      percentRate = PERCENT_AUTO_LOW;
+    }
+  }
+
+  if (goal.value === 'consumer') {
+    // firstPaymentInput.value = 0;
+    if (creditValueInput.value < CONSUMER_VALUE_LIMIT_LOW) {
+      percentRate = PERCENT_CONSUMER_HIGH;
+    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_LOW && creditValueInput.value < CONSUMER_VALUE_LIMIT_HIGH) {
+      percentRate = PERCENT_CONSUMER_MIDDLE;
+    } else if (creditValueInput.value >= CONSUMER_VALUE_LIMIT_HIGH) {
+      percentRate = PERCENT_CONSUMER_LOW;
+    }
+
+    if (salaryClient.checked === true) {
+      percentRate = percentRate - PERCENT_CONSUMER_DELTA;
+    }
+  }
+
+  showErrorCreditValue();
+  showErrorBlock();
+
+  var years = creditTimeSlider.value;
+  var months = years * MONTHS_PER_YEAR;
+  // вывод в HTML разметку полученных значений в раздел "Наше предложение"
+  showOffer(offerPercentRate, percentRate, '%');
+  showOffer(offerCreditValue, creditSum, '');
+
+  percentRateMonth = percentRate * PERCENT_COEF / MONTHS_PER_YEAR;
+  monthPayment = Math.trunc(creditSum * (percentRateMonth + percentRateMonth / (Math.pow((1 + percentRateMonth), months) - 1)));
+  showOffer(offerMonthPayment, monthPayment, '');
+
+  requiredProfit = Math.trunc(monthPayment / REQUIRED_PROFIT_RATIO);
+  showOffer(offerRequiredProfit, requiredProfit, '');
+
+  // firstPaymentInput.value = Math.trunc(firstPaymentInput.value);
+
+  // наложение масок
+  moneyMask(creditValueInput);
+  moneyMask(firstPaymentInput);
+  moneyMask(offerCreditValue);
+  moneyMask(offerMonthPayment);
+  moneyMask(offerRequiredProfit);
+  yearMask(creditTimeInput);
+}
+
+function recalcFirstPayment() {
+  unmasking(firstPaymentInput);
+  // возвращает слайдер в минимальное значение
+  firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+  getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
+  firstPaymentInput.value = Math.trunc(creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF);
+  firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+  // пересчет количества лет, точнее надписей
+  moneyMask(firstPaymentInput);
+}
+
+// в данном случае без делегирования обходиться - из-за масок
+
+function disableLettersOnInput() {
+  creditValueInput.addEventListener('keydown', function (evt) {
+    // запрещает ввод букв и символов
+    if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+      evt.preventDefault();
+    }
+  });
+
+  firstPaymentInput.addEventListener('keydown', function (evt) {
+    // запрещает ввод букв и символов
+    if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+      evt.preventDefault();
+    }
+  });
+}
 
 // увеличение и уменьшение суммы кредита по клику
-creditPlusButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  creditValueInput.value = Number(getUnmaskValue(creditValueInput)) + creditStep;
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
+function onPlusMinusButtons() {
+  creditPlusButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    creditValueInput.value = Number(getUnmaskValue(creditValueInput)) + creditStep;
+    recalcFirstPayment();
+    reCalculate();
+  });
+
+  creditMinusButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    // если ноль или ничего и нажимается минус, то значение приравнивается к 0
+    if (creditValueInput.value === '' || Number(getUnmaskValue(creditValueInput)) === 0) {
+      creditValueInput.value = 0;
+    } else {
+      creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
+      if (creditValueInput.value < 0) {
+        creditValueInput.value = 0;
+      }
+    }
+    recalcFirstPayment();
+    reCalculate();
+  });
+}
+
+function onRequestButtonClick() {
+  requestButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    finalForm.classList.remove('final-form--closed');
+    changeFinalForm();
+    finalFormUsername.focus();
+  });
+}
+
+function onFinalFormSubmit() {
+  finalForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    if (!finalFormUsername.value || !finalFormPhone.value || !finalFormEmail.value) {
+      finalFormWrapper.classList.add('final-form__input-wrapper--error');
+      setTimeout(deleteError, 1100);
+    } else {
+      // добавление в localStorage полей формы
+      localStorage.setItem = ('username', finalFormUsername.value);
+      localStorage.setItem = ('phone', finalFormPhone.value);
+      localStorage.setItem = ('email', finalFormEmail.value);
+      popup.classList.remove('popup--closed');
+      document.body.classList.add('body__container--popup-opened');
+    }
+  });
+}
+
+creditValueInput.addEventListener('change', function () {
+  recalcFirstPayment();
   reCalculate();
-  moneyMask(creditValueInput);
+});
+creditTimeInput.addEventListener('input', reCalculate);
+creditCheckboxBlock.addEventListener('input', reCalculate);
+
+firstPaymentInput.addEventListener('input', function () {
+  unmasking(firstPaymentInput);
 });
 
-creditMinusButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
-  firstPaymentInput.value = firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF;
-  reCalculate();
-  moneyMask(creditValueInput);
-});
-
-requestButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  finalForm.classList.remove('final-form--closed');
-  changeFinalForm();
-  finalFormUsername.focus();
-});
-
-// добавление в localStorage полей формы
-finalForm.addEventListener('submit', function (evt) {
-  evt.preventDefault();
-
-  if (!finalFormUsername.value || !finalFormPhone.value || !finalFormEmail.value) {
-    finalFormWrapper.classList.add('final-form__input-wrapper--error');
-    setTimeout(deleteError, 1100);
-  } else {
-    localStorage.setItem = ('username', finalFormUsername.value);
-    localStorage.setItem = ('phone', finalFormPhone.value);
-    localStorage.setItem = ('email', finalFormEmail.value);
-    popup.classList.remove('popup--closed');
-    document.body.classList.add('body__container--popup-opened');
-  }
+creditValueInput.addEventListener('input', function () {
+  unmasking(creditValueInput);
 });
 
 onCustomSelect();
 makeActiveItem();
+disableLettersOnInput();
+onPlusMinusButtons();
 onFirstPaymentInputChange();
 onFirstPaymentSlider();
 onCreditTimeSlider();
 onCreditTimeInput();
+onRequestButtonClick();
+onFinalFormSubmit();
 popupHandler();
 phoneMask(finalFormPhone);
 
