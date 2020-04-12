@@ -546,20 +546,16 @@ firstPaymentInput.addEventListener('keydown', function (evt) {
 });
 
 creditValueInput.addEventListener('change', function () {
-  // // возвращает первоначальный взнос в минимальное значение
-  // firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
-  // firstPaymentInput.value = getUnmaskValue(creditValueInput) * firstPaymentSlider.value * PERCENT_COEF;
-  // firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
-  // // пересчет количества лет, точнее надписей
-  // getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
-
-  // тест
-  // unmasking(creditValueInput);
-
   function recalcFirstPayment() {
     unmasking(firstPaymentInput);
     // необходимо возвращать слайдер в минимальное значение
-    firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+    // firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
+
+    firstPaymentSlider.value = CreditSettings[goal.value].CREDIT_PERCENT_MIN;
+    firstPaymentInput.value = creditValueInput.value * firstPaymentSlider.value * PERCENT_COEF;
+    firstPaymentPercent.textContent = firstPaymentSlider.value + '%';
+    // пересчет количества лет, точнее надписей
+    getSliderToInput(creditTimeSlider, creditTimeInput, creditTimeText, ' лет');
     if (firstPaymentInput.value < 1) {
       firstPaymentInput.value = 0;
     }
