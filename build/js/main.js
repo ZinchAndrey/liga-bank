@@ -535,28 +535,81 @@ function recalcFirstPayment() {
   // пересчет количества лет, точнее надписей
   moneyMask(firstPaymentInput);
 }
-// в данном случае без делегирования обходиться
-// creditForm.addEventListener('input', reCalculate);
 
-creditValueInput.addEventListener('keydown', function (evt) {
-  // запрещает ввод букв и символов
-  if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
-    evt.preventDefault();
-  }
-});
+// в данном случае без делегирования обходиться - из-за масок
 
-firstPaymentInput.addEventListener('keydown', function (evt) {
-  // запрещает ввод букв и символов
-  if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+function disableLettersOnInput() {
+  creditValueInput.addEventListener('keydown', function (evt) {
+    // запрещает ввод букв и символов
+    if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+      evt.preventDefault();
+    }
+  });
+
+  firstPaymentInput.addEventListener('keydown', function (evt) {
+    // запрещает ввод букв и символов
+    if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+      evt.preventDefault();
+    }
+  });
+}
+
+// увеличение и уменьшение суммы кредита по клику
+function onPlusMinusButtons() {
+  creditPlusButton.addEventListener('click', function (evt) {
     evt.preventDefault();
-  }
-});
+    creditValueInput.value = Number(getUnmaskValue(creditValueInput)) + creditStep;
+    recalcFirstPayment();
+    reCalculate();
+  });
+
+  creditMinusButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    // если ноль или ничего и нажимается минус, то значение приравнивается к 0
+    if (creditValueInput.value === '' || Number(getUnmaskValue(creditValueInput)) === 0) {
+      creditValueInput.value = 0;
+    } else {
+      creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
+      if (creditValueInput.value < 0) {
+        creditValueInput.value = 0;
+      }
+    }
+    recalcFirstPayment();
+    reCalculate();
+  });
+}
+
+function onRequestButtonClick() {
+  requestButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    finalForm.classList.remove('final-form--closed');
+    changeFinalForm();
+    finalFormUsername.focus();
+  });
+}
+
+function onFinalFormSubmit() {
+  finalForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    if (!finalFormUsername.value || !finalFormPhone.value || !finalFormEmail.value) {
+      finalFormWrapper.classList.add('final-form__input-wrapper--error');
+      setTimeout(deleteError, 1100);
+    } else {
+      // добавление в localStorage полей формы
+      localStorage.setItem = ('username', finalFormUsername.value);
+      localStorage.setItem = ('phone', finalFormPhone.value);
+      localStorage.setItem = ('email', finalFormEmail.value);
+      popup.classList.remove('popup--closed');
+      document.body.classList.add('body__container--popup-opened');
+    }
+  });
+}
 
 creditValueInput.addEventListener('change', function () {
   recalcFirstPayment();
   reCalculate();
 });
-// firstPaymentInput.addEventListener('change', reCalculate);
 creditTimeInput.addEventListener('input', reCalculate);
 creditCheckboxBlock.addEventListener('input', reCalculate);
 
@@ -566,76 +619,18 @@ firstPaymentInput.addEventListener('input', function () {
 
 creditValueInput.addEventListener('input', function () {
   unmasking(creditValueInput);
-
-  // function recalcFirstPayment() {
-  //   var lastTimeout;
-  //   if (lastTimeout) {
-  //     clearTimeout(lastTimeout);
-  //   }
-  //   lastTimeout = setTimeout(function () {
-  //     unmasking(firstPaymentInput);
-  //     firstPaymentInput.value = Math.trunc(firstPaymentSlider.value * creditValueInput.value * PERCENT_COEF);
-  //     if (firstPaymentInput.value < 1) {
-  //       firstPaymentInput.value = 0;
-  //     }
-  //     moneyMask(firstPaymentInput);
-  //   }, 10);
-  // }
-  // recalcFirstPayment();
-});
-
-// увеличение и уменьшение суммы кредита по клику
-creditPlusButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  creditValueInput.value = Number(getUnmaskValue(creditValueInput)) + creditStep;
-  recalcFirstPayment();
-  reCalculate();
-});
-
-creditMinusButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  // если ноль или ничего и нажимается минус, то значение приравнивается к 0
-  if (creditValueInput.value === '' || Number(getUnmaskValue(creditValueInput)) === 0) {
-    creditValueInput.value = 0;
-  } else {
-    creditValueInput.value = Number(getUnmaskValue(creditValueInput)) - creditStep;
-    if (creditValueInput.value < 0) {
-      creditValueInput.value = 0;
-    }
-  }
-  recalcFirstPayment();
-  reCalculate();
-});
-
-requestButton.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  finalForm.classList.remove('final-form--closed');
-  changeFinalForm();
-  finalFormUsername.focus();
-});
-
-// добавление в localStorage полей формы
-finalForm.addEventListener('submit', function (evt) {
-  evt.preventDefault();
-
-  if (!finalFormUsername.value || !finalFormPhone.value || !finalFormEmail.value) {
-    finalFormWrapper.classList.add('final-form__input-wrapper--error');
-    setTimeout(deleteError, 1100);
-  } else {
-    localStorage.setItem = ('username', finalFormUsername.value);
-    localStorage.setItem = ('phone', finalFormPhone.value);
-    localStorage.setItem = ('email', finalFormEmail.value);
-    popup.classList.remove('popup--closed');
-    document.body.classList.add('body__container--popup-opened');
-  }
 });
 
 onCustomSelect();
 makeActiveItem();
+disableLettersOnInput();
+onPlusMinusButtons();
 onFirstPaymentInputChange();
 onFirstPaymentSlider();
 onCreditTimeSlider();
 onCreditTimeInput();
+onRequestButtonClick();
+onFinalFormSubmit();
 popupHandler();
 phoneMask(finalFormPhone);
 
