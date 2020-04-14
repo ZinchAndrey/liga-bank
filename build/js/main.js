@@ -74,6 +74,17 @@ var CreditSettings = {
   },
 };
 
+// коды клавиш
+var Keycodes = {
+  ESCAPE: 27,
+  A: 65,
+  Z: 90,
+  SUBTRACT: 109,
+  DECIMAL_POINT: 110,
+  COMMA: 188,
+  SLASH: 191,
+};
+
 // цель кредита
 var goal = document.querySelector('#goal');
 var creditParameters = document.querySelector('.credit__parameters');
@@ -120,11 +131,18 @@ var errorHeader = document.querySelector('.credit__error-header');
 
 // финальная форма - шаг 3
 var finalForm = document.querySelector('.final-form');
-var finalFormUsername = document.querySelector('[name=username]');
-var finalFormPhone = document.querySelector('[name=phone]');
-var finalFormEmail = document.querySelector('[name=mail]');
+var finalFormUsername = finalForm.querySelector('[name=username]');
+var finalFormPhone = finalForm.querySelector('[name=phone]');
+var finalFormEmail = finalForm.querySelector('[name=mail]');
 var requestNumber = 1; // начальное значение счетчика заявок
 var finalFormWrapper = document.querySelector('.final-form__input-wrapper');
+var finalFormCreditType = document.querySelector('#final-form__credit-type');
+var finalFormCreditValue = document.querySelector('#final-form__credit-value');
+var finalFormFirstPayment = document.querySelector('#final-form__first-payment');
+var finalFormCreditTime = document.querySelector('#final-form__credit-time');
+var finalFormCreditLabel = document.querySelector('#final-form__credit-label');
+var finalFormFirstPaymentBlock = document.querySelector('.final-form__item--first-payment');
+var finalFormRequestNumber = document.querySelector('#credit-request-number');
 
 // popup
 var popup = document.querySelector('.popup');
@@ -144,13 +162,9 @@ var requiredProfit; // требуемый доход
 // подключение масок на input
 /* eslint-disable */
 jQuery(document).ready(function () {
-
   $(creditValueInput).mask('000 000 000 000 рублей', { reverse: true });
   $(firstPaymentInput).mask('000 000 000 000 рублей', { reverse: true });
   $(creditTimeInput).mask('000 лет', { reverse: true });
-
-  // $(test).mask('000 000 000 000 рублей', { reverse: true });
-
 });
 
 // накладывает денежную маску на элемент
@@ -201,7 +215,7 @@ function onBlurSelect() {
 
 // закрывает выпадалющий список
 function closeSelect() {
-  if (selectList.classList.contains('credit__select-list--closed') === false) {
+  if (!selectList.classList.contains('credit__select-list--closed')) {
     selectList.classList.add('credit__select-list--closed');
     changeSelectClass();
   }
@@ -209,7 +223,7 @@ function closeSelect() {
 
 // меняет класс выбранного селекта <p> для корректного отображения рамок
 function changeSelectClass() {
-  if (selectList.classList.contains('credit__select-list--closed') === true) {
+  if (selectList.classList.contains('credit__select-list--closed')) {
     activeSelect.classList.add('credit__select-active--closed');
   } else {
     activeSelect.classList.remove('credit__select-active--closed');
@@ -369,13 +383,6 @@ function changeLabels(creditType) {
 
 // меняет поля в блоке шаг 3
 function changeFinalForm() {
-  var finalFormCreditType = document.querySelector('#final-form__credit-type');
-  var finalFormCreditValue = document.querySelector('#final-form__credit-value');
-  var finalFormFirstPayment = document.querySelector('#final-form__first-payment');
-  var finalFormCreditTime = document.querySelector('#final-form__credit-time');
-  var finalFormCreditLabel = document.querySelector('#final-form__credit-label');
-  var finalFormFirstPaymentBlock = document.querySelector('.final-form__item--first-payment');
-  var finalFormRequestNumber = document.querySelector('#credit-request-number');
   var requestNumberText = '0000' + Number(requestNumber);
 
   // local storage
@@ -432,7 +439,7 @@ function popupHandler() {
   });
 
   document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === 27) {
+    if (evt.keyCode === Keycodes.ESCAPE) {
       if (!popup.classList.contains('popup--closed')) {
         closePopup();
       }
@@ -541,14 +548,14 @@ function recalcFirstPayment() {
 function disableLettersOnInput() {
   creditValueInput.addEventListener('keydown', function (evt) {
     // запрещает ввод букв и символов
-    if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+    if (evt.keyCode >= Keycodes.A && evt.keyCode <= Keycodes.Z || evt.keyCode === Keycodes.SUBTRACT || evt.keyCode === Keycodes.DECIMAL_POINT || (evt.keyCode >= Keycodes.COMMA && evt.keyCode <= Keycodes.SLASH)) {
       evt.preventDefault();
     }
   });
 
   firstPaymentInput.addEventListener('keydown', function (evt) {
     // запрещает ввод букв и символов
-    if (evt.keyCode >= 65 && evt.keyCode <= 90 || evt.keyCode === 109 || evt.keyCode === 110 || (evt.keyCode >= 188 && evt.keyCode <= 191)) {
+    if (evt.keyCode >= Keycodes.A && evt.keyCode <= Keycodes.Z || evt.keyCode === Keycodes.SUBTRACT || evt.keyCode === Keycodes.DECIMAL_POINT || (evt.keyCode >= Keycodes.COMMA && evt.keyCode <= Keycodes.SLASH)) {
       evt.preventDefault();
     }
   });
