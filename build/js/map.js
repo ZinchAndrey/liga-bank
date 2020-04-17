@@ -103,15 +103,31 @@ var pins = [
 
 ];
 
+var mapForm = document.querySelector('.map__checkboxes-form');
+var checkboxRussia = document.querySelector('#checkbox-russia');
+var checkboxSNG = document.querySelector('#checkbox-sng');
+var checkboxEurope = document.querySelector('#checkbox-europe');
 var myMap;
-// pins.forEach(function (item, index, array) {
-//   console.log(index);
-// });
-function drawPins () {
+
+function mapCheckboxesHandler () {
+  mapForm.addEventListener('input', function () {
+    deletePins();
+    drawCheckedPins();
+  })
+}
+
+function drawCheckedPins () {
+  mapForm.querySelectorAll('input:checked').forEach(function (item) {
+    drawPins (item.name)
+  });
+}
+
+function drawPins (region) {
   pins
     .slice()
-    .filter(function () {
-      return true;
+    .filter(function (pin) {
+      // return true;
+      return (pin.region == region);
     })
     .map(function (pin) {
       return new ymaps.Placemark(pin.coords, {
@@ -146,41 +162,16 @@ function init() {
   // Создание карты.
   myMap = new ymaps.Map("map", {
     // Координаты центра карты.
-    center: [55.76, 37.64],
+    center: [53.5, 37.64],
     // Уровень масштабирования. Допустимые значения:
     // от 0 (весь мир) до 19.
     zoom: 4,
     controls: []
   }),
-  drawPins ();
-
-    // // Создаём макет содержимого.
-    // MyIconContentLayout = ymaps.templateLayoutFactory.createClass(
-    //   '<div style="color: #FFFFFF; font-weight: bold;">$[properties.iconContent]</div>'
-    // ),
-
-    // myPlacemark = new ymaps.Placemark([55.753215, 37.622504], {
-    //   hintContent: 'Лига Банк',
-    //   balloonContent: 'Отделение банка в г. Москва'
-    // }, {
-    //   // Опции.
-    //   // Необходимо указать данный тип макета.
-    //   iconLayout: 'default#image',
-    //   // Своё изображение иконки метки.
-    //   iconImageHref: 'img/location-icon.svg',
-    //   // Размеры метки.
-    //   iconImageSize: [35, 40],
-    //   // Смещение левого верхнего угла иконки относительно
-    //   // её "ножки" (точки привязки).
-    //   iconImageOffset: [-17, -40],
-    //   city: 'Москва',
-    //   region: 'Россия',
-    // });
-
-  // myMap.geoObjects
-  //   .add(myPlacemark);
-    //.add(myPlacemarkWithContent);
+  drawCheckedPins();
 };
+
+mapCheckboxesHandler();
 
 // 4134: "zoomControl"
   // 4135: "searchControl"
