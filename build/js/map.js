@@ -133,28 +133,32 @@ function drawPins () {
     .forEach(function (pin) {
       myMap.geoObjects
       .add(pin);
+      // myMap.geoObjects
+      // .remove(pin);
     })
+}
+
+function deletePins () {
+  myMap.geoObjects.removeAll();
 }
 
 function init() {
   // Создание карты.
   myMap = new ymaps.Map("map", {
     // Координаты центра карты.
-    // Порядок по умолчанию: «широта, долгота».
-    // Чтобы не определять координаты центра карты вручную,
-    // воспользуйтесь инструментом Определение координат.
     center: [55.76, 37.64],
     // Уровень масштабирования. Допустимые значения:
     // от 0 (весь мир) до 19.
     zoom: 4,
     controls: []
   }),
+  drawPins ();
 
     // // Создаём макет содержимого.
     // MyIconContentLayout = ymaps.templateLayoutFactory.createClass(
     //   '<div style="color: #FFFFFF; font-weight: bold;">$[properties.iconContent]</div>'
     // ),
-    drawPins ();
+
     // myPlacemark = new ymaps.Placemark([55.753215, 37.622504], {
     //   hintContent: 'Лига Банк',
     //   balloonContent: 'Отделение банка в г. Москва'
