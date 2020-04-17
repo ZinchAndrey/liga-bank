@@ -12,7 +12,7 @@
     <link href="fonts/Roboto-Bold.woff2" rel="preload" as="font" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.min.css">
     <!-- подключение API Яндекс Карт -->
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=e0d08d24-473b-458c-b56e-08e5272b270a&lang=ru_RU" type="text/javascript">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=e0d08d24-473b-458c-b56e-08e5272b270a&lang=ru_RU" type="text/javascript" defer="">
     </script>
   </head>
   <body>
@@ -168,7 +168,7 @@
       </section>
       <section class="popup popup--closed" id="popup">
         <div class="popup__container">
-          <button class="popup__close-button"></button>
+          <button class="popup__close-button" aria-label="Закрыть popup"></button>
           <h3>Спасибо за обращение в наш банк</h3>
           <p>Наш менеджер скоро свяжется с вами по указанному номеру телефона.</p>
         </div>
@@ -176,6 +176,22 @@
       <section class="map">
         <div class="map__container">
           <h2>Отделения Лига Банка</h2>
+          <form action="" class="map__checkboxes-form">
+            <div class="map__checkboxes-container">
+              <div class="map__checkbox-wrapper">
+                <input class="visually-hidden" type="checkbox" id="checkbox-russia" name="Россия" checked="">
+                <label for="checkbox-russia">Россия</label>
+              </div>
+              <div class="map__checkbox-wrapper">
+                <input class="visually-hidden" type="checkbox" id="checkbox-sng" name="СНГ" checked="">
+                <label for="checkbox-sng">СНГ</label>
+              </div>
+              <div class="map__checkbox-wrapper">
+                <input class="visually-hidden" type="checkbox" id="checkbox-europe" name="Европа" checked="">
+                <label for="checkbox-europe">Европа</label>
+              </div>
+            </div>
+          </form>
           <div class="map__block" id="map"></div>
         </div>
       </section>
@@ -186,10 +202,10 @@
           <a href="#" class="page-header__logo">
             <img src="img/logo@2x.svg" alt="Логотип" width="155">
           </a>
-          <p>
+          <address>
             150015, г. Москва, ул. Московская, д. 32 Генеральная лицензия Банка
             России №1050 Ⓒ Лига Банк, 2019
-          </p>
+          </address>
         </div>
         <ul class="page-footer__nav nav nav--footer">
           <li class="nav__item"><a href="#">Услуги</a></li>
@@ -224,6 +240,6 @@
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery.mask.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/map.js"></script>
+    <script src="js/map.js" defer=""></script>
   </body>
 </html>

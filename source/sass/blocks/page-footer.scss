@@ -12,8 +12,10 @@
 .page-footer__logo-block {
   width: 260px;
 
-  p {
+  p,
+  address {
     font-weight: normal;
+    font-style: normal;
     font-size: 12px;
     line-height: 140%;
     color: $grey-text;
